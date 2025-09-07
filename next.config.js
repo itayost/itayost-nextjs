@@ -1,20 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['three'],
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    domains: ['localhost'],
   },
-  // Enable React strict mode
-  reactStrictMode: true,
-  // Support for RTL
-  i18n: {
-    locales: ['he', 'en'],
-    defaultLocale: 'he',
+  webpack: (config) => {
+    // Ensure proper handling of Three.js
+    config.externals = [...(config.externals || []), { canvas: 'canvas' }];
+    
+    return config;
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

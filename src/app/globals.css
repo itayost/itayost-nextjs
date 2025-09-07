@@ -1,297 +1,326 @@
-/* src/app/globals.css - Refined Bold Design System */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* src/app/globals.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ===================================
-   Base Styles - Dark & Refined
-   =================================== */
-@layer base {
-  :root {
-    /* Premium dark colors */
-    --color-bg: 5 5 5;
-    --color-surface: 17 17 19;
-    --color-border: 36 36 40;
-    --color-text: 255 255 255;
-    --color-text-muted: 156 163 175;
-    --color-accent: 139 92 246;
-  }
+/* ======================================
+   GENERATIVE TECH DESIGN SYSTEM
+   ====================================== */
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+:root {
+  /* Base Colors - ALWAYS use these */
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray-100: #F5F5F5;
+  --gray-300: #D4D4D4;
+  --gray-500: #737373;
+  --gray-700: #404040;
+  --gray-900: #171717;
 
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  /* Cyan Accent - Main accent color */
+  --accent-primary: #00D9FF;
+  --accent-mesh: #00B8D4;
+  --accent-glow: #00E5FF;
+  --accent-dark: #0097A7;
 
-  body {
-    @apply bg-dark-950 text-white;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    overflow-x: hidden;
-    position: relative;
-    background-image: 
-      radial-gradient(ellipse at top, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
-  }
+  /* Spacing System */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 2rem;     /* 32px */
+  --space-lg: 4rem;     /* 64px */
+  --space-xl: 8rem;     /* 128px */
+  --space-2xl: 16rem;   /* 256px */
+}
 
-  /* Selection */
-  ::selection {
-    background: rgba(139, 92, 246, 0.2);
-    color: white;
-  }
+/* ======================================
+   BASE STYLES
+   ====================================== */
 
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  ::-webkit-scrollbar-track {
-    @apply bg-dark-900;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-dark-500 rounded-full;
-  }
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-dark-400;
+/* ======================================
+   TYPOGRAPHY SYSTEM
+   ====================================== */
+
+/* Massive Display - Hero Only */
+.text-mega {
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+/* Large Display - Section Headers */
+.text-display {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+/* Medium Display - Subsections */
+.text-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+/* Body Text */
+.text-body {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+/* Caption/Meta */
+.text-caption {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Text Outline Effect */
+.text-outline {
+  -webkit-text-stroke: 2px rgba(0, 217, 255, 0.5);
+  -webkit-text-fill-color: transparent;
+  text-stroke: 2px rgba(0, 217, 255, 0.5);
+  color: transparent;
+}
+
+/* Hebrew Typography Adjustments */
+[lang="he"],
+[dir="rtl"] {
+  font-family: 'Heebo', 'Rubik', -apple-system, sans-serif;
+  letter-spacing: 0;
+  line-height: 1.7;
+}
+
+[lang="he"] .text-mega,
+[dir="rtl"] .text-mega {
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  font-family: 'Heebo', 'Rubik', sans-serif;
+}
+
+/* ======================================
+   INTERACTIVE EFFECTS
+   ====================================== */
+
+/* Hover Line Effect */
+.hover-line {
+  position: relative;
+  transition: opacity 0.3s;
+}
+
+.hover-line::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent-primary);
+  transition: width 0.3s ease;
+}
+
+.hover-line:hover::after {
+  width: 100%;
+}
+
+/* Subtle Fade */
+.hover-fade {
+  transition: opacity 0.3s;
+}
+
+.hover-fade:hover {
+  opacity: 0.8;
+}
+
+/* Minimal Lift */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* ======================================
+   BUTTONS
+   ====================================== */
+
+.btn-outline {
+  padding: 0.75rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--white);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: var(--white);
+  color: var(--black);
+}
+
+/* ======================================
+   ANIMATIONS
+   ====================================== */
+
+@keyframes scrollDown {
+  to {
+    transform: translateY(80px);
   }
 }
 
-/* ===================================
-   Component Classes
-   =================================== */
-@layer components {
-  /* Glass Cards */
-  .card-glass {
-    @apply relative overflow-hidden rounded-2xl;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .card-glass-heavy {
-    @apply relative overflow-hidden rounded-2xl;
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.08) 0%, 
-      rgba(255, 255, 255, 0.04) 100%);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  }
-
-  .card-dark {
-    @apply relative overflow-hidden rounded-2xl;
-    @apply bg-dark-800 border border-dark-600;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  .card-gradient {
-    @apply relative overflow-hidden rounded-2xl p-8;
-    background: linear-gradient(135deg, 
-      rgba(139, 92, 246, 0.1) 0%, 
-      rgba(99, 102, 241, 0.05) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-  }
-
-  /* Buttons - Fully Rounded (Pill Shape) */
-  .btn-primary {
-    @apply relative px-8 py-4 rounded-full font-semibold;
-    @apply bg-gradient-to-r from-accent-purple to-accent-indigo;
-    @apply text-white shadow-xl;
-    @apply transition-all duration-300;
-    @apply hover:shadow-2xl hover:scale-105 hover:-translate-y-0.5;
-    @apply active:scale-100;
-  }
-
-  .btn-glass {
-    @apply relative px-8 py-4 rounded-full font-medium;
-    @apply glass text-white;
-    @apply border border-white/10;
-    @apply transition-all duration-300;
-    @apply hover:bg-white/10 hover:border-white/20;
-    @apply hover:shadow-lg hover:-translate-y-0.5;
-  }
-
-  .btn-outline {
-    @apply relative px-8 py-4 rounded-full font-medium;
-    @apply bg-transparent;
-    @apply border-2 border-white/20;
-    @apply text-white;
-    @apply transition-all duration-300;
-    @apply hover:bg-white hover:text-dark-950;
-    @apply hover:shadow-xl hover:scale-105;
-  }
-
-  .btn-ghost {
-    @apply relative px-6 py-3 rounded-full font-medium;
-    @apply bg-transparent text-white/70;
-    @apply transition-all duration-300;
-    @apply hover:bg-white/5 hover:text-white;
-  }
-
-  /* Typography */
-  .heading-display {
-    @apply font-display font-bold text-white;
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-  }
-
-  .heading-gradient {
-    @apply text-transparent bg-clip-text;
-    @apply bg-gradient-to-r from-accent-purple to-accent-indigo;
-  }
-
-  .text-muted {
-    @apply text-gray-400;
-  }
-
-  /* Geometric Shapes */
-  .shape-hexagon {
-    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  }
-
-  .shape-diamond {
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  }
-
-  .shape-triangle {
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  }
-
-  .shape-circle {
-    @apply rounded-full;
-  }
-
-  /* Background Patterns */
-  .bg-grid {
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  .bg-dots {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Overlays */
-  .overlay-gradient {
-    @apply absolute inset-0 pointer-events-none;
-    background: linear-gradient(135deg,
-      rgba(139, 92, 246, 0.1) 0%,
-      rgba(99, 102, 241, 0.05) 100%);
-  }
-
-  .overlay-dark {
-    @apply absolute inset-0 pointer-events-none;
-    background: linear-gradient(to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.5) 100%);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ===================================
-   Utility Classes
-   =================================== */
-@layer utilities {
-  /* Animations */
-  .animate-float {
-    animation: float 20s ease-in-out infinite;
+@keyframes pulse-cyan {
+  0%, 100% {
+    opacity: 0.5;
   }
-
-  .animate-morph {
-    animation: morph 20s ease-in-out infinite;
-  }
-
-  /* Hover Effects */
-  .hover-lift {
-    @apply transition-all duration-300 ease-out;
-    @apply hover:-translate-y-2 hover:shadow-2xl;
-  }
-
-  .hover-scale {
-    @apply transition-transform duration-300;
-    @apply hover:scale-105;
-  }
-
-  /* Text Effects */
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Backdrop Effects */
-  .backdrop-heavy {
-    backdrop-filter: blur(20px) saturate(180%) contrast(110%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%) contrast(110%);
-  }
-
-  /* Masks */
-  .mask-gradient-bottom {
-    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-  }
-
-  .mask-gradient-radial {
-    mask-image: radial-gradient(circle, black 0%, transparent 70%);
-    -webkit-mask-image: radial-gradient(circle, black 0%, transparent 70%);
-  }
-
-  /* Border Gradients */
-  .border-gradient {
-    @apply relative;
-    background: linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
-                linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(99, 102, 241, 0.5)) border-box;
-    border: 1px solid transparent;
+  50% {
+    opacity: 1;
   }
 }
 
-/* ===================================
-   Custom Animations
-   =================================== */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  33% { transform: translateY(-20px) translateX(10px); }
-  66% { transform: translateY(10px) translateX(-10px); }
+/* ======================================
+   UTILITIES
+   ====================================== */
+
+/* Mix Blend Modes */
+.mix-blend-difference {
+  mix-blend-mode: difference;
 }
 
-@keyframes morph {
-  0%, 100% { 
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  50% { 
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
+/* Gradients */
+.gradient-mesh {
+  background: linear-gradient(135deg, #00D9FF 0%, #00B8D4 50%, #00E5FF 100%);
 }
 
-/* ===================================
-   Responsive Design
-   =================================== */
+.gradient-subtle {
+  background: linear-gradient(180deg, #000000 0%, #171717 100%);
+}
+
+/* Grid Pattern Background */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ======================================
+   SELECTION STYLES
+   ====================================== */
+
+::selection {
+  background-color: var(--accent-primary);
+  color: var(--black);
+}
+
+::-moz-selection {
+  background-color: var(--accent-primary);
+  color: var(--black);
+}
+
+/* ======================================
+   SCROLLBAR STYLES
+   ====================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-700);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+/* ======================================
+   RESPONSIVE UTILITIES
+   ====================================== */
+
 @media (max-width: 768px) {
-  .text-display-massive {
-    letter-spacing: -0.02em;
+  .text-mega {
+    font-size: clamp(3rem, 10vw, 5rem);
   }
   
-  .backdrop-heavy {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+  .text-display {
+    font-size: clamp(2rem, 7vw, 4rem);
+  }
+  
+  .text-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
   }
 }
 
+/* ======================================
+   PERFORMANCE OPTIMIZATIONS
+   ====================================== */
+
+/* GPU Acceleration for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -299,5 +328,25 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* ======================================
+   DEBUG GRID (Development Only)
+   ====================================== */
+
+.debug-grid::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 9999;
 }
