@@ -97,7 +97,7 @@ export default function Avatar({
               alt={alt}
               fill
               className="object-cover"
-              onError={() => setImageError(true)}
+              onError={() => { setImageError(true); }}
             />
           ) : name ? (
             <span className="select-none">{getInitials(name)}</span>

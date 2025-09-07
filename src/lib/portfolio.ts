@@ -11,7 +11,7 @@ export function filterProjects(projects: Project[], filters: ProjectFilter): Pro
   
   if (filters.technologies && filters.technologies.length > 0) {
     filtered = filtered.filter(p => 
-      filters.technologies!.some(tech => 
+      filters.technologies?.some(tech => 
         p.technologies.some(pt => pt.name.toLowerCase() === tech.toLowerCase())
       )
     );
@@ -19,7 +19,7 @@ export function filterProjects(projects: Project[], filters: ProjectFilter): Pro
   
   if (filters.tags && filters.tags.length > 0) {
     filtered = filtered.filter(p => 
-      filters.tags!.some(tag => p.tags.includes(tag))
+      filters.tags?.some(tag => p.tags.includes(tag))
     );
   }
   

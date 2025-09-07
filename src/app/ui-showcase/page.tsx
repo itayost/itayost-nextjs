@@ -298,7 +298,7 @@ export default function UIShowcasePage() {
               <ShowcaseItem title="Features" code={`<Badge icon={<Star />} removable>Featured</Badge>`}>
                 <div className="flex flex-wrap gap-3">
                   <Badge icon={<Star className="w-4 h-4" />}>With Icon</Badge>
-                  <Badge removable onRemove={() => console.log('removed')}>Removable</Badge>
+                  <Badge removable onRemove={() => { console.log('removed'); }}>Removable</Badge>
                   <Badge variant="gradient" pulse>Pulsing</Badge>
                   <Badge size="xs">Extra Small</Badge>
                   <Badge size="lg" variant="primary">Large</Badge>
@@ -355,21 +355,21 @@ export default function UIShowcasePage() {
             <div className="grid md:grid-cols-2 gap-6">
               <ShowcaseItem title="Modal" code={`<Modal isOpen={isOpen} onClose={onClose}>...</Modal>`}>
                 <div className="space-y-4">
-                  <Button variant="gradient" onClick={() => setIsModalOpen(true)}>
+                  <Button variant="gradient" onClick={() => { setIsModalOpen(true); }}>
                     Open Modal
                   </Button>
                   <Modal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => { setIsModalOpen(false); }}
                     title="Example Modal"
                     description="This is a modal component with glassmorphism effect"
                     variant="glass"
                     footer={
                       <>
-                        <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
+                        <Button variant="ghost" onClick={() => { setIsModalOpen(false); }}>
                           Cancel
                         </Button>
-                        <Button variant="gradient" onClick={() => setIsModalOpen(false)}>
+                        <Button variant="gradient" onClick={() => { setIsModalOpen(false); }}>
                           Confirm
                         </Button>
                       </>
@@ -384,12 +384,12 @@ export default function UIShowcasePage() {
 
               <ShowcaseItem title="Drawer" code={`<Drawer isOpen={isOpen} position="right">...</Drawer>`}>
                 <div className="space-y-4">
-                  <Button variant="outline" onClick={() => setIsDrawerOpen(true)}>
+                  <Button variant="outline" onClick={() => { setIsDrawerOpen(true); }}>
                     Open Drawer
                   </Button>
                   <Drawer
                     isOpen={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
+                    onClose={() => { setIsDrawerOpen(false); }}
                     title="Settings"
                     position="right"
                   >
@@ -677,14 +677,14 @@ export default function UIShowcasePage() {
                   <div className="flex justify-center gap-4">
                     <Button 
                       variant="outline" 
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                      onClick={() => { setCurrentStep(Math.max(0, currentStep - 1)); }}
                       disabled={currentStep === 0}
                     >
                       Previous
                     </Button>
                     <Button 
                       variant="gradient"
-                      onClick={() => setCurrentStep(Math.min(3, currentStep + 1))}
+                      onClick={() => { setCurrentStep(Math.min(3, currentStep + 1)); }}
                       disabled={currentStep === 3}
                     >
                       Next
@@ -760,9 +760,9 @@ function ShowcaseItem({ title, code, children }: ShowcaseItemProps) {
   const [copied, setCopied] = useState(false);
 
   const copyCode = () => {
-    navigator.clipboard.writeText(code);
+    void navigator.clipboard.writeText(code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => { setCopied(false); }, 2000);
   };
 
   return (

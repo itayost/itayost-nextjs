@@ -15,10 +15,10 @@ export default function WhatsAppFAB() {
     const timer = setTimeout(() => {
       setShowTooltip(true);
       // Hide tooltip after 5 seconds
-      setTimeout(() => setShowTooltip(false), 5000);
+      setTimeout(() => { setShowTooltip(false); }, 5000);
     }, 5000);
 
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(timer); };
   }, []);
 
   const handleWhatsAppClick = () => {
@@ -41,7 +41,7 @@ export default function WhatsAppFAB() {
               👋 היי! יש לך שאלה? דבר איתי בוואטסאפ!
             </p>
             <button
-              onClick={() => setShowTooltip(false)}
+              onClick={() => { setShowTooltip(false); }}
               className="absolute -top-1 -right-1 bg-gray-700 rounded-full p-1"
             >
               <X className="h-3 w-3" />

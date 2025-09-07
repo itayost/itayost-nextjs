@@ -219,7 +219,7 @@ export default function ServicesGrid() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   const filteredServices = selectedCategory === 'all' 
@@ -293,7 +293,7 @@ export default function ServicesGrid() {
             return (
               <motion.button
                 key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => { setSelectedCategory(category.id); }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`
@@ -335,8 +335,8 @@ export default function ServicesGrid() {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                onMouseEnter={() => setHoveredService(service.id)}
-                onMouseLeave={() => setHoveredService(null)}
+                onMouseEnter={() => { setHoveredService(service.id); }}
+                onMouseLeave={() => { setHoveredService(null); }}
               >
                 <ServiceCard 
                   service={service} 

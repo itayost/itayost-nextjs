@@ -108,7 +108,7 @@ export default function AboutSkills() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   const activeSkills = skillsData.find(cat => cat.id === activeCategory);
@@ -205,7 +205,7 @@ export default function AboutSkills() {
             return (
               <motion.button
                 key={category.id}
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => { setActiveCategory(category.id); }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`
@@ -292,8 +292,8 @@ function SkillCard({ skill, index, gradient }: { skill: Skill; index: number; gr
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, type: "spring" }}
       whileHover={{ y: -10, scale: 1.02 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => { setIsHovered(true); }}
+      onMouseLeave={() => { setIsHovered(false); }}
       className="relative group"
     >
       <div className="card-glass-heavy rounded-3xl p-6 h-full backdrop-blur-2xl">

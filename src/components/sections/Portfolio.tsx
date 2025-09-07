@@ -188,7 +188,7 @@ export default function Portfolio() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   const filteredProjects = selectedCategory === 'all' 
@@ -288,7 +288,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => { setSelectedCategory(category.id); }}
                 className={`
                   relative group px-8 py-4 rounded-full font-medium
                   transition-all duration-300 
@@ -380,8 +380,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -10, transition: { duration: 0.3 } }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => { setIsHovered(true); }}
+      onMouseLeave={() => { setIsHovered(false); }}
       className="relative h-full"
     >
       <div className="card-glass-heavy rounded-3xl overflow-hidden h-full flex flex-col">

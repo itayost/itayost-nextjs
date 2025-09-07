@@ -121,7 +121,7 @@ export default function Services() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -213,8 +213,8 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredService(service.id)}
-              onMouseLeave={() => setHoveredService(null)}
+              onMouseEnter={() => { setHoveredService(service.id); }}
+              onMouseLeave={() => { setHoveredService(null); }}
             >
               <ServiceCard 
                 service={service} 

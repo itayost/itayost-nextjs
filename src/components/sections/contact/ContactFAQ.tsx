@@ -126,7 +126,7 @@ export default function ContactFAQ({
               return (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => { setSelectedCategory(category.id); }}
                   className={cn(
                     "px-4 py-2 rounded-xl text-sm font-medium",
                     "transition-all duration-200",
@@ -158,7 +158,7 @@ export default function ContactFAQ({
                     className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 overflow-hidden"
                   >
                     <button
-                      onClick={() => toggleItem(item.id)}
+                      onClick={() => { toggleItem(item.id); }}
                       className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-800/30 transition-colors"
                     >
                       <div className="flex items-center gap-3">

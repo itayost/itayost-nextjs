@@ -117,7 +117,7 @@ export default function ServicesPricing() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -201,8 +201,8 @@ export default function ServicesPricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredPlan(plan.id)}
-              onMouseLeave={() => setHoveredPlan(null)}
+              onMouseEnter={() => { setHoveredPlan(plan.id); }}
+              onMouseLeave={() => { setHoveredPlan(null); }}
             >
               <PricingCard 
                 plan={plan} 

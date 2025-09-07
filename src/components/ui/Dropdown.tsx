@@ -42,7 +42,7 @@ export default function Dropdown({
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => { document.removeEventListener('mousedown', handleClickOutside); };
   }, []);
 
   const positions = {
@@ -66,7 +66,7 @@ export default function Dropdown({
 
   return (
     <div ref={dropdownRef} className={cn('relative inline-block', className)}>
-      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+      <div onClick={() => { setIsOpen(!isOpen); }} className="cursor-pointer">
         {trigger}
       </div>
 

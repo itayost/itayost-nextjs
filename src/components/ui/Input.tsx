@@ -113,8 +113,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               'outline-none focus:outline-none focus:ring-0',
               className
             )}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onFocus={() => { setIsFocused(true); }}
+            onBlur={() => { setIsFocused(false); }}
             {...props}
           />
           
@@ -122,7 +122,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {showPasswordToggle && type === 'password' && (
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => { setShowPassword(!showPassword); }}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

@@ -130,7 +130,7 @@ export default function Features() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -228,8 +228,8 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
-              onMouseEnter={() => setHoveredFeature(feature.id)}
-              onMouseLeave={() => setHoveredFeature(null)}
+              onMouseEnter={() => { setHoveredFeature(feature.id); }}
+              onMouseLeave={() => { setHoveredFeature(null); }}
             >
               <FeatureCard 
                 feature={feature} 

@@ -158,7 +158,7 @@ export function Pagination({
       {/* First & Previous */}
       {showFirst && (
         <button
-          onClick={() => onPageChange(1)}
+          onClick={() => { onPageChange(1); }}
           disabled={currentPage === 1}
           className={cn(
             'px-3 transition-all',
@@ -174,7 +174,7 @@ export function Pagination({
       )}
       
       <button
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+        onClick={() => { onPageChange(Math.max(1, currentPage - 1)); }}
         disabled={currentPage === 1}
         className={cn(
           'px-3 transition-all',
@@ -203,7 +203,7 @@ export function Pagination({
         return (
           <motion.button
             key={pageNumber}
-            onClick={() => onPageChange(pageNumber)}
+            onClick={() => { onPageChange(pageNumber); }}
             whileHover={{ scale: isActive ? 1 : 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={cn(
@@ -220,7 +220,7 @@ export function Pagination({
 
       {/* Next & Last */}
       <button
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+        onClick={() => { onPageChange(Math.min(totalPages, currentPage + 1)); }}
         disabled={currentPage === totalPages}
         className={cn(
           'px-3 transition-all',
@@ -235,7 +235,7 @@ export function Pagination({
 
       {showLast && (
         <button
-          onClick={() => onPageChange(totalPages)}
+          onClick={() => { onPageChange(totalPages); }}
           disabled={currentPage === totalPages}
           className={cn(
             'px-3 transition-all',

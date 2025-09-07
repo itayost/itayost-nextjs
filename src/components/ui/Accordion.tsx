@@ -91,7 +91,7 @@ export default function Accordion({
           >
             {/* Header */}
             <button
-              onClick={() => toggleItem(item.id)}
+              onClick={() => { toggleItem(item.id); }}
               className={cn(
                 'w-full px-6 py-4 flex items-center justify-between text-left transition-all',
                 currentVariant.header

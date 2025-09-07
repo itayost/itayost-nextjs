@@ -309,7 +309,7 @@ export function ScrollableTabs({
     <div className="relative">
       {showScrollButtons && canScrollLeft && (
         <button
-          onClick={() => scroll('left')}
+          onClick={() => { scroll('left'); }}
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-soft-md hover:shadow-soft-lg"
         >
           ←
@@ -328,7 +328,7 @@ export function ScrollableTabs({
       
       {showScrollButtons && canScrollRight && (
         <button
-          onClick={() => scroll('right')}
+          onClick={() => { scroll('right'); }}
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-soft-md hover:shadow-soft-lg"
         >
           →

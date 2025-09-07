@@ -81,8 +81,8 @@ export default function PortfolioGrid({
       initial="hidden"
       animate="visible"
       exit="exit"
-      onMouseEnter={() => setHoveredProject(project.id)}
-      onMouseLeave={() => setHoveredProject(null)}
+      onMouseEnter={() => { setHoveredProject(project.id); }}
+      onMouseLeave={() => { setHoveredProject(null); }}
       className="group relative"
     >
       <Link href={`/portfolio/${project.slug}`}>
@@ -304,7 +304,7 @@ export default function PortfolioGrid({
               className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12"
             >
               <button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => { setSelectedCategory('all'); }}
                 className={cn(
                   'px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300',
                   'text-sm sm:text-base font-medium',
@@ -318,7 +318,7 @@ export default function PortfolioGrid({
               {categories.map(category => (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => { setSelectedCategory(category.id); }}
                   className={cn(
                     'px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300',
                     'text-sm sm:text-base font-medium',

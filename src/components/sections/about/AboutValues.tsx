@@ -87,7 +87,7 @@ export default function AboutValues() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -171,8 +171,8 @@ export default function AboutValues() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredValue(value.id)}
-              onMouseLeave={() => setHoveredValue(null)}
+              onMouseEnter={() => { setHoveredValue(value.id); }}
+              onMouseLeave={() => { setHoveredValue(null); }}
             >
               <ValueCard value={value} isHovered={hoveredValue === value.id} />
             </motion.div>

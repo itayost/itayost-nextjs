@@ -27,7 +27,7 @@ export default function Header() {
     };
     
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => { window.removeEventListener('scroll', handleScroll); };
   }, []);
   
   return (
@@ -91,7 +91,7 @@ export default function Header() {
               
               {/* Mobile Menu Button */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={() => { setIsMobileMenuOpen(!isMobileMenuOpen); }}
                 className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
               >
                 {isMobileMenuOpen ? (
@@ -120,8 +120,7 @@ export default function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
+              onClick={() => { setIsMobileMenuOpen(false); }}            />
             
             {/* Menu Panel */}
             <motion.div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-dark-900 p-6">

@@ -56,7 +56,7 @@ export default function PortfolioPageClient() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   // Get icon for category
@@ -220,7 +220,7 @@ export default function PortfolioPageClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => { setSelectedCategory('all'); }}
                 className={`px-6 py-3 rounded-full transition-all duration-300 ${
                   selectedCategory === 'all'
                     ? 'bg-gradient-to-r from-accent-purple to-accent-indigo text-white shadow-xl'
@@ -240,7 +240,7 @@ export default function PortfolioPageClient() {
                     key={cat.id}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => { setSelectedCategory(cat.id); }}
                     className={`px-6 py-3 rounded-full transition-all duration-300 ${
                       selectedCategory === cat.id
                         ? 'bg-gradient-to-r from-accent-purple to-accent-indigo text-white shadow-xl'
@@ -261,7 +261,7 @@ export default function PortfolioPageClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('grid')}
+                onClick={() => { setViewMode('grid'); }}
                 className={`p-3 rounded-full transition-all duration-300 ${
                   viewMode === 'grid'
                     ? 'bg-gradient-to-r from-accent-purple to-accent-indigo text-white'
@@ -273,7 +273,7 @@ export default function PortfolioPageClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('masonry')}
+                onClick={() => { setViewMode('masonry'); }}
                 className={`p-3 rounded-full transition-all duration-300 ${
                   viewMode === 'masonry'
                     ? 'bg-gradient-to-r from-accent-purple to-accent-indigo text-white'
@@ -310,8 +310,8 @@ export default function PortfolioPageClient() {
                   animate="visible"
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
+                  onMouseEnter={() => { setHoveredProject(project.id); }}
+                  onMouseLeave={() => { setHoveredProject(null); }}
                   className={`group relative ${
                     viewMode === 'masonry' && project.featured ? 'lg:col-span-2 lg:row-span-2' : ''
                   }`}
@@ -351,7 +351,7 @@ export default function PortfolioPageClient() {
                                 href={project.liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => { e.stopPropagation(); }}
                                 className="p-4 bg-white/10 backdrop-blur-xl rounded-full hover:bg-white/20 transition-colors"
                               >
                                 <ExternalLink className="w-6 h-6 text-white" />

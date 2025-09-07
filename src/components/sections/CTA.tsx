@@ -38,7 +38,7 @@ export default function CTA() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -174,7 +174,7 @@ export default function CTA() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => { setEmail(e.target.value); }}
                   placeholder="השאירו את המייל שלכם..."
                   className="flex-1 px-8 py-5 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:bg-white/10 focus:border-accent-purple focus:outline-none transition-all duration-300 text-lg"
                   required

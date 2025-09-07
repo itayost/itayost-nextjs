@@ -137,7 +137,7 @@ export default function Stats() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -272,8 +272,8 @@ function StatCard({ stat }: { stat: Stat }) {
     <motion.div
       whileHover={{ y: -10, scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => { setIsHovered(true); }}
+      onMouseLeave={() => { setIsHovered(false); }}
       className="relative group h-full"
     >
       <div className="card-glass-heavy rounded-3xl p-8 h-full text-center backdrop-blur-2xl">

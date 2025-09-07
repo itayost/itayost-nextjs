@@ -118,7 +118,7 @@ export default function AboutProcess() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
   
   return (
@@ -216,8 +216,8 @@ export default function AboutProcess() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, type: "spring" }}
-                onMouseEnter={() => setActiveStep(step.step)}
-                onMouseLeave={() => setActiveStep(null)}
+                onMouseEnter={() => { setActiveStep(step.step); }}
+                onMouseLeave={() => { setActiveStep(null); }}
                 className={`relative ${index >= 3 ? 'lg:mt-24' : ''}`}
               >
                 <ProcessCard 

@@ -87,7 +87,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
     };
     
     window.addEventListener('scroll', updateScrollProgress);
-    return () => window.removeEventListener('scroll', updateScrollProgress);
+    return () => { window.removeEventListener('scroll', updateScrollProgress); };
   }, []);
   
   // Keyboard navigation for image gallery
@@ -104,7 +104,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
     };
     
     window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    return () => { window.removeEventListener('keydown', handleKeyPress); };
   }, [project.images.length]);
   
   // Touch/Swipe gestures for mobile
@@ -122,8 +122,8 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
   }, [project.images.length]);
   
   // Image navigation functions
-  const nextImage = () => setSelectedImage(prev => Math.min(project.images.length - 1, prev + 1));
-  const prevImage = () => setSelectedImage(prev => Math.max(0, prev - 1));
+  const nextImage = () => { setSelectedImage(prev => Math.min(project.images.length - 1, prev + 1)); };
+  const prevImage = () => { setSelectedImage(prev => Math.max(0, prev - 1)); };
   
   // Share functionality
   const handleShare = async () => {
@@ -414,7 +414,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
                   )}
                   {project.demoUrl && (
                     <button
-                      onClick={() => setIsPlaying(true)}
+                      onClick={() => { setIsPlaying(true); }}
                       className="btn-outline group"
                     >
                       <span className="flex items-center gap-3">
@@ -440,7 +440,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
                     drag="x"
                     dragConstraints={{ left: 0, right: 0 }}
                     onDragEnd={handleImageSwipe}
-                    onClick={() => setShowImageModal(true)}
+                    onClick={() => { setShowImageModal(true); }}
                   >
                     {/* Loading skeleton */}
                     {imageLoading[selectedImage] !== false && (
@@ -453,8 +453,8 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       priority={selectedImage === 0}
-                      onLoad={() => setImageLoading(prev => ({ ...prev, [selectedImage]: false }))}
-                      onLoadStart={() => setImageLoading(prev => ({ ...prev, [selectedImage]: true }))}
+                      onLoad={() => { setImageLoading(prev => ({ ...prev, [selectedImage]: false })); }}
+                      onLoadStart={() => { setImageLoading(prev => ({ ...prev, [selectedImage]: true })); }}
                     />
                     
                     {/* Fullscreen overlay hint */}
@@ -501,7 +501,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
                             key={index}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => setSelectedImage(index)}
+                            onClick={() => { setSelectedImage(index); }}
                             className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-all ${
                               selectedImage === index 
                                 ? 'border-accent-purple shadow-lg shadow-accent-purple/50' 
@@ -923,7 +923,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
-            onClick={() => setShowImageModal(false)}
+            onClick={() => { setShowImageModal(false); }}
           >
             <div className="relative max-w-6xl max-h-full w-full">
               <Image
@@ -992,7 +992,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
                 title={`${project.title} Demo`}
               />
               <button
-                onClick={() => setIsPlaying(false)}
+                onClick={() => { setIsPlaying(false); }}
                 className="absolute top-4 right-4 btn-glass p-3"
               >
                 <X className="w-6 h-6" />
