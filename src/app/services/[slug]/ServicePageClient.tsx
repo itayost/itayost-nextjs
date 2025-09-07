@@ -42,7 +42,7 @@ export default function ServicePageClient({ slug }: ServicePageClientProps) {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => { window.removeEventListener('mousemove', handleMouseMove); };
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   if (!service) {
@@ -301,7 +301,7 @@ export default function ServicePageClient({ slug }: ServicePageClientProps) {
               </motion.div>
 
               <div className="max-w-4xl mx-auto">
-                {service.process.map((step, index) => (
+                {service.process && service.process.map((step, index) => (
                   <motion.div
                     key={index}
                     variants={itemVariants}
@@ -316,8 +316,8 @@ export default function ServicePageClient({ slug }: ServicePageClientProps) {
                       >
                         {step.step}
                       </motion.div>
-                      {/* Connector Line */}
-                      {index < service.process.length - 1 && (
+                      {/* Connector Line - FIXED: Added null checking */}
+                      {index < (service.process?.length || 0) - 1 && (
                         <div className="absolute right-8 top-16 h-full w-0.5 bg-gradient-to-b from-accent-purple/50 to-transparent" />
                       )}
                     </div>
