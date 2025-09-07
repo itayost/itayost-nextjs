@@ -121,7 +121,8 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-            
+            />
+
             {/* Menu Panel */}
             <motion.div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-dark-900 p-6">
               {/* Close Button */}
