@@ -458,7 +458,7 @@ export default function PortfolioPageClient() {
                 נסו לבחור קטגוריה אחרת או צפו בכל הפרויקטים
               </p>
               <button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => { setSelectedCategory('all'); }}
                 className="btn-primary"
               >
                 צפה בכל הפרויקטים

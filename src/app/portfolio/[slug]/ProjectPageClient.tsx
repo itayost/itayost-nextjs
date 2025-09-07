@@ -923,7 +923,7 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
-            onClick={() => setShowImageModal(false)}
+            onClick={() => { setShowImageModal(false); }}
           >
             <div className="relative max-w-6xl max-h-full w-full">
               <Image

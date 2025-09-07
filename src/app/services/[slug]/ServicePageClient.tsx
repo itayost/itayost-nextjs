@@ -42,7 +42,7 @@ export default function ServicePageClient({ slug }: ServicePageClientProps) {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
 
   if (!service) {

@@ -113,8 +113,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               'outline-none focus:outline-none focus:ring-0',
               className
             )}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onFocus={() => { setIsFocused(true); }}
+            onBlur={() => { setIsFocused(false); }}
             {...props}
           />
           
