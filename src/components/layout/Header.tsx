@@ -121,7 +121,6 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm"
             />
             
             {/* Menu Panel */}

@@ -1,0 +1,6 @@
+@@ -111,1 +111,1 @@
+-  const handleImageSwipe = useCallback((event: any, info: PanInfo) => {
++  const handleImageSwipe = useCallback((event: unknown, info: PanInfo) => {
+@@ -150,1 +150,1 @@
+-    const icons: Record<string, any> = {
++    const icons: Record<string, unknown> = {
