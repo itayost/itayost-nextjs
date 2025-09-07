@@ -1,35 +1,37 @@
-// src/app/service/page.tsx
+// src/app/services/page.tsx
 import { Metadata } from 'next';
-
-// Import all  service components
-import ServiceHero from '@/components/sections/services/ServiceHero';
-import ServiceGrid from '@/components/sections/services/ServiceGrid';
-import CTA from '@/components/sections/CTA';
-import ServicesPricing from '@/components/sections/services/ServicesPricing';
-//import ServiceSkills from '@/components/sections/service/serviceSkills';
-//import serviceProcess from '@/components/sections/service/serviceProcess';
-//import serviceValues from '@/components/sections/service/serviceValues';
-//import CTA from '@/components/sections/CTA';
+import ServicesClient from './ServicesClient';
 
 export const metadata: Metadata = {
-  title: 'אודות | איתי אוסטרייכר - Full Stack Developer',
-  description: 'מפתח Full Stack עם תשוקה לטכנולוגיה ויצירה דיגיטלית',
-  // ... rest of metadata
+  title: 'שירותי פיתוח דיגיטליים | ItayOst - פתרונות מקצה לקצה',
+  description: 'שירותי פיתוח מתקדמים: אתרים, אפליקציות, חנויות אונליין ופתרונות דיגיטליים מותאמים אישית. ייעוץ חינם ותמחור שקוף.',
+  keywords: [
+    'פיתוח אתרים',
+    'אפליקציות מובייל',
+    'חנויות אונליין',
+    'עיצוב UI/UX',
+    'קידום אתרים',
+    'תחזוקת אתרים',
+    'פתרונות דיגיטליים'
+  ],
+  openGraph: {
+    title: 'שירותי פיתוח דיגיטליים מקצועיים | ItayOst',
+    description: 'פתרונות דיגיטליים מותאמים אישית עם טכנולוגיות מתקדמות וביצועים מעולים',
+    type: 'website',
+    locale: 'he_IL',
+    url: 'https://itayost.com/services',
+    siteName: 'ItayOst',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'שירותי פיתוח דיגיטליים | ItayOst',
+    description: 'פתרונות דיגיטליים מקצועיים מקצה לקצה',
+  },
+  alternates: {
+    canonical: 'https://itayost.com/services',
+  },
 };
 
-export default function servicePage() {
-  return (
-    <>
-      {/* Hero Section - Introduction */}
-      <ServiceHero />
-      
-      {/* Bio Section - Personal Story */}
-      <ServiceGrid />
-
-      <ServicesPricing />
-
-      {/* CTA Section - Contact Prompt */}
-      <CTA />
-    </>
-  );
+export default function ServicesPage() {
+  return <ServicesClient />;
 }
