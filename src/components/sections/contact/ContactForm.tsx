@@ -1,0 +1,502 @@
+// src/components/sections/contact/ContactForm.tsx
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import Button from '@/components/ui/Button';
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  Building, 
+  Briefcase, 
+  MessageSquare,
+  DollarSign,
+  Calendar,
+  Send,
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ContactFormData, ServiceType, ProjectBudget, ProjectTimeline } from '@/types/contact';
+
+interface ContactFormProps {
+  className?: string;
+}
+
+const services: { value: ServiceType; label: string }[] = [
+  { value: 'web-development', label: 'פיתוח אתרים' },
+  { value: 'mobile-app', label: 'אפליקציית מובייל' },
+  { value: 'management-system', label: 'מערכת ניהול' },
+  { value: 'e-commerce', label: 'חנות אונליין' },
+  { value: 'ui-ux', label: 'עיצוב UI/UX' },
+  { value: 'consulting', label: 'ייעוץ טכנולוגי' },
+  { value: 'other', label: 'אחר' }
+];
+
+const budgets: { value: ProjectBudget; label: string }[] = [
+  { value: 'under-10k', label: 'עד 10,000 ₪' },
+  { value: '10k-25k', label: '10,000 - 25,000 ₪' },
+  { value: '25k-50k', label: '25,000 - 50,000 ₪' },
+  { value: '50k-100k', label: '50,000 - 100,000 ₪' },
+  { value: 'above-100k', label: 'מעל 100,000 ₪' },
+  { value: 'not-sure', label: 'לא בטוח' }
+];
+
+const timelines: { value: ProjectTimeline; label: string }[] = [
+  { value: 'asap', label: 'בהקדם האפשרי' },
+  { value: '1-month', label: 'תוך חודש' },
+  { value: '2-3-months', label: '2-3 חודשים' },
+  { value: '3-6-months', label: '3-6 חודשים' },
+  { value: 'above-6-months', label: 'מעל 6 חודשים' },
+  { value: 'flexible', label: 'גמיש' }
+];
+
+export default function ContactForm({ className }: ContactFormProps) {
+  const [formData, setFormData] = useState<ContactFormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    company: '',
+    position: '',
+    serviceType: 'web-development',
+    projectDescription: '',
+    budget: undefined,
+    timeline: undefined,
+    referralSource: '',
+    message: '',
+    newsletter: false,
+    agreeToTerms: false
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<Record<keyof ContactFormData, string>> = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'שם פרטי חובה';
+    if (!formData.lastName.trim()) newErrors.lastName = 'שם משפחה חובה';
+    if (!formData.email.trim()) newErrors.email = 'אימייל חובה';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'אימייל לא תקין';
+    }
+    if (!formData.phone.trim()) newErrors.phone = 'טלפון חובה';
+    if (!formData.projectDescription.trim()) newErrors.projectDescription = 'תיאור הפרויקט חובה';
+    if (!formData.agreeToTerms) newErrors.agreeToTerms = 'יש לאשר את התנאים';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setSubmitStatus('success');
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        company: '',
+        position: '',
+        serviceType: 'web-development',
+        projectDescription: '',
+        budget: undefined,
+        timeline: undefined,
+        referralSource: '',
+        message: '',
+        newsletter: false,
+        agreeToTerms: false
+      });
+      
+      // Reset status after 5 seconds
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } catch (error) {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (field: keyof ContactFormData, value: string | boolean | undefined) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  return (
+    <section className={cn('py-16 sm:py-20 lg:py-24 bg-gray-900', className)}>
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto"
+        >
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              שלחו לנו הודעה
+            </h2>
+            <p className="text-gray-400 text-base sm:text-lg">
+              מלאו את הטופס ונחזור אליכם בהקדם
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Personal Information */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-gray-700/30">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <User className="h-5 w-5 text-teal-400" />
+                פרטים אישיים
+              </h3>
+              
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    שם פרטי *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) => handleChange('firstName', e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 bg-gray-900/50 border rounded-xl",
+                      "text-white placeholder-gray-500",
+                      "focus:outline-none focus:ring-2 focus:ring-teal-500/50",
+                      "transition-all duration-200",
+                      errors.firstName ? "border-red-500" : "border-gray-700/50"
+                    )}
+                    placeholder="יוסי"
+                  />
+                  {errors.firstName && (
+                    <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    שם משפחה *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.lastName}
+                    onChange={(e) => handleChange('lastName', e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 bg-gray-900/50 border rounded-xl",
+                      "text-white placeholder-gray-500",
+                      "focus:outline-none focus:ring-2 focus:ring-teal-500/50",
+                      "transition-all duration-200",
+                      errors.lastName ? "border-red-500" : "border-gray-700/50"
+                    )}
+                    placeholder="כהן"
+                  />
+                  {errors.lastName && (
+                    <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Mail className="inline h-4 w-4 ml-1" />
+                    אימייל *
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 bg-gray-900/50 border rounded-xl",
+                      "text-white placeholder-gray-500",
+                      "focus:outline-none focus:ring-2 focus:ring-teal-500/50",
+                      "transition-all duration-200",
+                      errors.email ? "border-red-500" : "border-gray-700/50"
+                    )}
+                    placeholder="yossi@example.com"
+                    dir="ltr"
+                  />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Phone className="inline h-4 w-4 ml-1" />
+                    טלפון *
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleChange('phone', e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 bg-gray-900/50 border rounded-xl",
+                      "text-white placeholder-gray-500",
+                      "focus:outline-none focus:ring-2 focus:ring-teal-500/50",
+                      "transition-all duration-200",
+                      errors.phone ? "border-red-500" : "border-gray-700/50"
+                    )}
+                    placeholder="050-1234567"
+                    dir="ltr"
+                  />
+                  {errors.phone && (
+                    <p className="mt-1 text-sm text-red-400">{errors.phone}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Building className="inline h-4 w-4 ml-1" />
+                    חברה
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.company}
+                    onChange={(e) => handleChange('company', e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                    placeholder="שם החברה"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Briefcase className="inline h-4 w-4 ml-1" />
+                    תפקיד
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.position}
+                    onChange={(e) => handleChange('position', e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                    placeholder="מנהל שיווק"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Project Information */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-gray-700/30">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <Briefcase className="h-5 w-5 text-teal-400" />
+                פרטי הפרויקט
+              </h3>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    סוג השירות *
+                  </label>
+                  <select
+                    value={formData.serviceType}
+                    onChange={(e) => handleChange('serviceType', e.target.value as ServiceType)}
+                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                  >
+                    {services.map(service => (
+                      <option key={service.value} value={service.value}>
+                        {service.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <MessageSquare className="inline h-4 w-4 ml-1" />
+                    תיאור הפרויקט *
+                  </label>
+                  <textarea
+                    value={formData.projectDescription}
+                    onChange={(e) => handleChange('projectDescription', e.target.value)}
+                    rows={4}
+                    className={cn(
+                      "w-full px-4 py-3 bg-gray-900/50 border rounded-xl",
+                      "text-white placeholder-gray-500",
+                      "focus:outline-none focus:ring-2 focus:ring-teal-500/50",
+                      "transition-all duration-200 resize-none",
+                      errors.projectDescription ? "border-red-500" : "border-gray-700/50"
+                    )}
+                    placeholder="ספרו לנו על הפרויקט שלכם..."
+                  />
+                  {errors.projectDescription && (
+                    <p className="mt-1 text-sm text-red-400">{errors.projectDescription}</p>
+                  )}
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <DollarSign className="inline h-4 w-4 ml-1" />
+                      תקציב משוער
+                    </label>
+                    <select
+                      value={formData.budget || ''}
+                      onChange={(e) => handleChange('budget', e.target.value as ProjectBudget || undefined)}
+                      className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                    >
+                      <option value="">בחרו תקציב</option>
+                      {budgets.map(budget => (
+                        <option key={budget.value} value={budget.value}>
+                          {budget.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <Calendar className="inline h-4 w-4 ml-1" />
+                      לוח זמנים
+                    </label>
+                    <select
+                      value={formData.timeline || ''}
+                      onChange={(e) => handleChange('timeline', e.target.value as ProjectTimeline || undefined)}
+                      className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                    >
+                      <option value="">בחרו לוח זמנים</option>
+                      {timelines.map(timeline => (
+                        <option key={timeline.value} value={timeline.value}>
+                          {timeline.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    איך שמעתם עלינו?
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.referralSource}
+                    onChange={(e) => handleChange('referralSource', e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200"
+                    placeholder="גוגל, המלצה, פייסבוק..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    הודעה נוספת
+                  </label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) => handleChange('message', e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all duration-200 resize-none"
+                    placeholder="משהו נוסף שחשוב לנו לדעת?"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Checkboxes */}
+            <div className="space-y-4">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.newsletter}
+                  onChange={(e) => handleChange('newsletter', e.target.checked)}
+                  className="mt-1 w-5 h-5 bg-gray-900/50 border border-gray-700/50 rounded text-teal-500 focus:ring-teal-500/50"
+                />
+                <span className="text-gray-300 text-sm">
+                  אני מעוניין לקבל עדכונים וטיפים בנושא פיתוח וטכנולוגיה
+                </span>
+              </label>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.agreeToTerms}
+                  onChange={(e) => handleChange('agreeToTerms', e.target.checked)}
+                  className={cn(
+                    "mt-1 w-5 h-5 bg-gray-900/50 border rounded",
+                    "text-teal-500 focus:ring-teal-500/50",
+                    errors.agreeToTerms ? "border-red-500" : "border-gray-700/50"
+                  )}
+                />
+                <span className="text-gray-300 text-sm">
+                  אני מאשר את <a href="/terms" className="text-teal-400 hover:underline">תנאי השימוש</a> ו<a href="/privacy" className="text-teal-400 hover:underline">מדיניות הפרטיות</a> *
+                </span>
+              </label>
+              {errors.agreeToTerms && (
+                <p className="text-sm text-red-400">{errors.agreeToTerms}</p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <div className="text-center">
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                disabled={isSubmitting || submitStatus === 'success'}
+                className="min-w-[200px]"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin ml-2" />
+                    שולח...
+                  </>
+                ) : submitStatus === 'success' ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 ml-2" />
+                    נשלח בהצלחה!
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-5 w-5 ml-2" />
+                    שלח הודעה
+                  </>
+                )}
+              </Button>
+
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-xl"
+                >
+                  <p className="text-green-400 flex items-center justify-center gap-2">
+                    <CheckCircle className="h-5 w-5" />
+                    תודה! קיבלנו את הפנייה שלכם ונחזור אליכם בהקדם
+                  </p>
+                </motion.div>
+              )}
+
+              {submitStatus === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl"
+                >
+                  <p className="text-red-400 flex items-center justify-center gap-2">
+                    <AlertCircle className="h-5 w-5" />
+                    משהו השתבש. אנא נסו שוב או צרו קשר טלפוני
+                  </p>
+                </motion.div>
+              )}
+            </div>
+          </form>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

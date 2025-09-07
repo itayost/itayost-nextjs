@@ -1,0 +1,1005 @@
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, useScroll, useTransform, PanInfo, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import { 
+  ChevronRight,
+  ArrowLeft,
+  ExternalLink,
+  Github,
+  Calendar,
+  Users,
+  Clock,
+  Award,
+  Zap,
+  Code,
+  Layers,
+  Target,
+  TrendingUp,
+  CheckCircle,
+  Star,
+  Quote,
+  ArrowRight,
+  Play,
+  Sparkles,
+  Package,
+  FileText,
+  BarChart,
+  Smartphone,
+  Monitor,
+  Tablet,
+  X,
+  ChevronLeft,
+  Share2,
+  Download,
+  Maximize2
+} from 'lucide-react';
+import { getRelatedProjects } from '@/data/portfolio';
+import CTA from '@/components/sections/CTA';
+import { Project } from '@/types/portfolio';
+
+interface ProjectPageClientProps {
+  project: Project;
+}
+
+export default function ProjectPageClient({ project }: ProjectPageClientProps) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageLoading, setImageLoading] = useState<Record<number, boolean>>({});
+  const [scrollProgress, setScrollProgress] = useState(0);
+  
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  
+  const relatedProjects = getRelatedProjects(project.slug, 3);
+  
+  // Mouse tracking with performance optimization
+  useEffect(() => {
+    let rafId: number;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const { clientX, clientY } = e;
+        const x = (clientX - window.innerWidth / 2) / window.innerWidth;
+        const y = (clientY - window.innerHeight / 2) / window.innerHeight;
+        setMousePosition({ x, y });
+      });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+  
+  // Scroll progress tracking
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      setScrollProgress(Math.min((scrolled / scrollHeight) * 100, 100));
+    };
+    
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+  
+  // Keyboard navigation for image gallery
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setSelectedImage(prev => Math.max(0, prev - 1));
+      } else if (e.key === 'ArrowRight') {
+        setSelectedImage(prev => Math.min(project.images.length - 1, prev + 1));
+      } else if (e.key === 'Escape') {
+        setShowImageModal(false);
+        setIsPlaying(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [project.images.length]);
+  
+  // Touch/Swipe gestures for mobile
+  const handleImageSwipe = useCallback((event: any, info: PanInfo) => {
+    const swipeThreshold = 50;
+    if (Math.abs(info.velocity.x) > 100) { // Only if fast swipe
+      if (info.offset.x > swipeThreshold) {
+        // Swipe right - previous image
+        setSelectedImage(prev => Math.max(0, prev - 1));
+      } else if (info.offset.x < -swipeThreshold) {
+        // Swipe left - next image
+        setSelectedImage(prev => Math.min(project.images.length - 1, prev + 1));
+      }
+    }
+  }, [project.images.length]);
+  
+  // Image navigation functions
+  const nextImage = () => setSelectedImage(prev => Math.min(project.images.length - 1, prev + 1));
+  const prevImage = () => setSelectedImage(prev => Math.max(0, prev - 1));
+  
+  // Share functionality
+  const handleShare = async () => {
+    const shareData = {
+      title: project.title,
+      text: project.description,
+      url: window.location.href,
+    };
+    
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        // You could add a toast notification here
+      }
+    } catch (error) {
+      console.log('Error sharing:', error);
+    }
+  };
+  
+  // Get icon for feature
+  const getFeatureIcon = (iconName?: string) => {
+    const icons: Record<string, any> = {
+      'Package': Package,
+      'FileText': FileText,
+      'Users': Users,
+      'BarChart': BarChart,
+      'Zap': Zap,
+      'CheckCircle': CheckCircle,
+      'Calendar': Calendar,
+      'Bell': Target,
+      'Search': Code,
+      'CreditCard': Award,
+      'Mail': ExternalLink,
+      'Cloud': Layers
+    };
+    return icons[iconName || 'Zap'] || Zap;
+  };
+  
+  // Get device icon
+  const getDeviceIcon = (type: string) => {
+    const icons: Record<string, any> = {
+      'desktop': Monitor,
+      'mobile': Smartphone,
+      'tablet': Tablet,
+      'logo': Layers
+    };
+    return icons[type] || Monitor;
+  };
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  return (
+    <>
+      {/* Scroll Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-white/5">
+        <motion.div
+          className="h-full bg-gradient-to-r from-accent-purple to-accent-indigo"
+          style={{ scaleX: scrollProgress / 100 }}
+          initial={{ scaleX: 0 }}
+          transformOrigin="left"
+        />
+      </div>
+
+      {/* Hero Section with Project Overview */}
+      <section className="relative min-h-screen pt-32 pb-20 bg-dark-950 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-950 to-dark-900" />
+          <div className="absolute inset-0 bg-grid opacity-10" />
+          
+          {/* Enhanced animated geometric shapes */}
+          <motion.div style={{ y: parallaxY }} className="absolute inset-0">
+            <motion.div
+              animate={{
+                x: mousePosition.x * 30,
+                y: mousePosition.y * 30,
+                rotate: 360,
+                scale: [1, 1.05, 1],
+              }}
+              transition={{ 
+                x: { type: "spring", stiffness: 50, damping: 20 },
+                y: { type: "spring", stiffness: 50, damping: 20 },
+                rotate: { duration: 30, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute top-20 right-10 w-96 h-96"
+              style={{ willChange: 'transform' }}
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-purple to-accent-indigo opacity-10 blur-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-purple/20 to-accent-indigo/20 shape-hexagon backdrop-blur-sm" />
+              </div>
+            </motion.div>
+            
+            <motion.div
+              animate={{
+                x: mousePosition.x * -20,
+                y: mousePosition.y * -20,
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 30, 
+                damping: 20,
+                scale: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute bottom-20 left-10 w-80 h-80"
+              style={{ willChange: 'transform' }}
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-blue to-accent-cyan opacity-10 blur-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-blue/20 to-accent-cyan/20 shape-diamond" />
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+        
+        <div className="container relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-6xl mx-auto"
+          >
+            {/* Breadcrumb with share button */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Link href="/" className="hover:text-accent-purple transition-colors">
+                  בית
+                </Link>
+                <ChevronRight className="h-4 w-4" />
+                <Link href="/portfolio" className="hover:text-accent-purple transition-colors">
+                  תיק עבודות
+                </Link>
+                <ChevronRight className="h-4 w-4" />
+                <span className="text-white">{project.title}</span>
+              </div>
+              
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                className="btn-glass group"
+              >
+                <span className="flex items-center gap-2">
+                  <Share2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">שתף</span>
+                </span>
+              </button>
+            </div>
+            
+            {/* Project Header */}
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Content Side */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                {/* Client Badge */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, type: "spring" }}
+                  className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full card-glass mb-6"
+                >
+                  <Package className="w-4 h-4 sm:w-5 sm:h-5 text-accent-purple" />
+                  <span className="text-white font-medium text-sm sm:text-base">{project.client}</span>
+                  {project.clientIndustry && (
+                    <>
+                      <span className="text-gray-500 hidden sm:inline">•</span>
+                      <span className="text-gray-400 text-sm hidden sm:inline">{project.clientIndustry}</span>
+                    </>
+                  )}
+                </motion.div>
+                
+                {/* Title */}
+                <h1 className="text-4xl sm:text-5xl lg:text-display-xl xl:text-display-2xl font-display font-bold text-white mb-4 leading-tight">
+                  {project.title}
+                </h1>
+                
+                {/* Subtitle */}
+                {project.subtitle && (
+                  <p className="text-xl sm:text-2xl lg:text-3xl heading-gradient font-semibold mb-6">
+                    {project.subtitle}
+                  </p>
+                )}
+                
+                {/* Description */}
+                <p className="text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed mb-8">
+                  {project.longDescription || project.description}
+                </p>
+                
+                {/* Enhanced Quick Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
+                  {project.stats?.duration && (
+                    <motion.div 
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="card-glass rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center"
+                    >
+                      <Clock className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-accent-purple" />
+                      <div className="text-lg sm:text-2xl font-bold text-white">{project.stats.duration}</div>
+                      <div className="text-xs text-gray-500">משך הפרויקט</div>
+                    </motion.div>
+                  )}
+                  {project.stats?.teamSize && (
+                    <motion.div 
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="card-glass rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center"
+                    >
+                      <Users className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-accent-blue" />
+                      <div className="text-lg sm:text-2xl font-bold text-white">{project.stats.teamSize}</div>
+                      <div className="text-xs text-gray-500">חברי צוות</div>
+                    </motion.div>
+                  )}
+                  {project.stats?.features && (
+                    <motion.div 
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="card-glass rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center"
+                    >
+                      <Layers className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-accent-emerald" />
+                      <div className="text-lg sm:text-2xl font-bold text-white">{project.stats.features}</div>
+                      <div className="text-xs text-gray-500">פיצ'רים</div>
+                    </motion.div>
+                  )}
+                  {project.testimonial?.rating && (
+                    <motion.div 
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="card-glass rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center"
+                    >
+                      <Star className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-accent-amber" />
+                      <div className="text-lg sm:text-2xl font-bold text-white">{project.testimonial.rating}★</div>
+                      <div className="text-xs text-gray-500">דירוג</div>
+                    </motion.div>
+                  )}
+                </div>
+                
+                {/* Enhanced CTA Buttons */}
+                <div className="flex flex-wrap gap-3 sm:gap-4">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary group"
+                    >
+                      <span className="flex items-center gap-3">
+                        צפה באתר
+                        <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      </span>
+                    </a>
+                  )}
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-glass"
+                    >
+                      <span className="flex items-center gap-3">
+                        <Github className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">קוד מקור</span>
+                        <span className="sm:hidden">קוד</span>
+                      </span>
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <button
+                      onClick={() => setIsPlaying(true)}
+                      className="btn-outline group"
+                    >
+                      <span className="flex items-center gap-3">
+                        <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+                        הדגמה
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+              
+              {/* Enhanced Image Gallery Side */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                {/* Main Image Display with Touch Support */}
+                <div className="relative card-glass-heavy rounded-2xl sm:rounded-3xl overflow-hidden backdrop-blur-xl">
+                  <motion.div 
+                    className="aspect-video relative group cursor-pointer"
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={handleImageSwipe}
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    {/* Loading skeleton */}
+                    {imageLoading[selectedImage] !== false && (
+                      <div className="absolute inset-0 bg-gray-800 animate-pulse" />
+                    )}
+                    
+                    <Image
+                      src={project.images[selectedImage]?.src || project.thumbnail}
+                      alt={project.images[selectedImage]?.alt || project.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      priority={selectedImage === 0}
+                      onLoad={() => setImageLoading(prev => ({ ...prev, [selectedImage]: false }))}
+                      onLoadStart={() => setImageLoading(prev => ({ ...prev, [selectedImage]: true }))}
+                    />
+                    
+                    {/* Fullscreen overlay hint */}
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <Maximize2 className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    {/* Device Frame Indicator */}
+                    <div className="absolute top-3 sm:top-4 right-3 sm:right-4 p-2 bg-white/10 backdrop-blur-xl rounded-full">
+                      {(() => {
+                        const DeviceIcon = getDeviceIcon(project.images[selectedImage]?.type || 'desktop');
+                        return <DeviceIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />;
+                      })()}
+                    </div>
+                    
+                    {/* Navigation arrows for desktop */}
+                    {project.images.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 btn-glass p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          disabled={selectedImage === 0}
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        
+                        <button
+                          onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 btn-glass p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          disabled={selectedImage === project.images.length - 1}
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </motion.div>
+                  
+                  {/* Enhanced Thumbnail Gallery */}
+                  {project.images.length > 1 && (
+                    <div className="p-3 sm:p-4 bg-gradient-to-t from-dark-900/80 to-transparent">
+                      <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                        {project.images.map((img, index) => (
+                          <motion.button
+                            key={index}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setSelectedImage(index)}
+                            className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-all ${
+                              selectedImage === index 
+                                ? 'border-accent-purple shadow-lg shadow-accent-purple/50' 
+                                : 'border-white/10 hover:border-white/30'
+                            }`}
+                          >
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              fill
+                              className="object-cover"
+                            />
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+        
+        {/* Enhanced scroll indicator */}
+        <motion.div
+          style={{ opacity }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <div className="flex flex-col items-center gap-2 text-gray-500">
+            <span className="text-xs uppercase tracking-widest">גלול לפרטים</span>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Sparkles className="w-5 h-5" />
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+      
+      {/* Challenge & Solution Section - Enhanced */}
+      {(project.challenge || project.solution) && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-gradient-to-b from-dark-950 to-dark-900">
+          <div className="container">
+            <div className="max-w-5xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                {/* Challenge */}
+                {project.challenge && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    whileHover={{ y: -5 }}
+                    className="card-glass-heavy rounded-2xl sm:rounded-3xl p-6 sm:p-8 backdrop-blur-xl"
+                  >
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent-red to-accent-orange rounded-xl sm:rounded-2xl flex items-center justify-center">
+                        <Target className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white">האתגר</h3>
+                    </div>
+                    <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
+                      {project.challenge}
+                    </p>
+                  </motion.div>
+                )}
+                
+                {/* Solution */}
+                {project.solution && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    whileHover={{ y: -5 }}
+                    className="card-glass-heavy rounded-2xl sm:rounded-3xl p-6 sm:p-8 backdrop-blur-xl"
+                  >
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent-purple to-accent-indigo rounded-xl sm:rounded-2xl flex items-center justify-center">
+                        <Zap className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white">הפתרון</h3>
+                    </div>
+                    <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
+                      {project.solution}
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+              
+              {/* Results */}
+              {project.results && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  whileHover={{ y: -5 }}
+                  className="mt-8 lg:mt-12 card-glass-heavy rounded-2xl sm:rounded-3xl p-6 sm:p-8 backdrop-blur-xl"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent-emerald to-accent-cyan rounded-xl sm:rounded-2xl flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">התוצאות</h3>
+                  </div>
+                  <p className="text-gray-400 leading-relaxed text-base sm:text-lg">
+                    {project.results}
+                  </p>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+      
+      {/* Features Grid - Enhanced */}
+      {project.features && project.features.length > 0 && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-dark-950">
+          <div className="container">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <motion.div 
+                variants={itemVariants}
+                className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto"
+              >
+                <h2 className="text-3xl sm:text-4xl lg:text-display-lg xl:text-display-xl font-display font-bold text-white mb-6">
+                  פיצ'רים עיקריים
+                </h2>
+                <p className="text-gray-400 text-base sm:text-lg lg:text-xl">
+                  הפונקציונליות המרכזית של הפרויקט
+                </p>
+              </motion.div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {project.features.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.05, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="card-glass-heavy rounded-2xl sm:rounded-3xl p-4 sm:p-6 backdrop-blur-xl text-center"
+                  >
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-gradient-to-r from-accent-purple to-accent-indigo rounded-xl sm:rounded-2xl flex items-center justify-center">
+                      {React.createElement(
+                        getFeatureIcon(feature.icon),
+                        { className: "w-6 h-6 sm:w-8 sm:h-8 text-white" }
+                      )}
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-400">
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+      
+      {/* Technologies Section - Enhanced */}
+      {project.technologies && project.technologies.length > 0 && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-gradient-to-b from-dark-950 to-dark-900">
+          <div className="container">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <motion.div 
+                variants={itemVariants}
+                className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto"
+              >
+                <h2 className="text-3xl sm:text-4xl lg:text-display-lg xl:text-display-xl font-display font-bold text-white mb-6">
+                  טכנולוגיות
+                </h2>
+                <p className="text-gray-400 text-base sm:text-lg lg:text-xl">
+                  הכלים והטכנולוגיות שהשתמשנו בהם
+                </p>
+              </motion.div>
+              
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-4xl mx-auto">
+                {project.technologies.map((tech, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.1, rotate: [-1, 1, -1] }}
+                    transition={{ duration: 0.3 }}
+                    className="px-4 sm:px-8 py-2 sm:py-4 card-glass rounded-full backdrop-blur-xl"
+                  >
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <Code className="w-4 h-4 sm:w-5 sm:h-5 text-accent-purple" />
+                      <span className="text-white font-medium text-sm sm:text-base">{tech.name}</span>
+                      <span className="text-xs px-2 py-1 bg-white/10 rounded-full text-gray-400">
+                        {tech.type}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+      
+      {/* Process Timeline - Enhanced */}
+      {project.process && project.process.length > 0 && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-dark-950">
+          <div className="container">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <motion.div 
+                variants={itemVariants}
+                className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto"
+              >
+                <h2 className="text-3xl sm:text-4xl lg:text-display-lg xl:text-display-xl font-display font-bold text-white mb-6">
+                  תהליך העבודה
+                </h2>
+                <p className="text-gray-400 text-base sm:text-lg lg:text-xl">
+                  השלבים שעברנו בפרויקט
+                </p>
+              </motion.div>
+              
+              <div className="max-w-4xl mx-auto">
+                {project.process.map((step, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="relative flex gap-6 sm:gap-8 mb-8 sm:mb-12 last:mb-0"
+                  >
+                    {/* Step Number */}
+                    <div className="flex-shrink-0">
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 360 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-accent-purple to-accent-indigo rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-xl"
+                      >
+                        {index + 1}
+                      </motion.div>
+                      {/* Connector Line */}
+                      {index < project.process.length - 1 && (
+                        <div className="absolute right-6 sm:right-8 top-12 sm:top-16 h-full w-0.5 bg-gradient-to-b from-accent-purple/50 to-transparent" />
+                      )}
+                    </div>
+                    
+                    {/* Step Content */}
+                    <motion.div 
+                      whileHover={{ x: 10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex-1 card-glass rounded-xl sm:rounded-2xl p-4 sm:p-6 backdrop-blur-xl"
+                    >
+                      <p className="text-sm sm:text-lg text-white">
+                        {step}
+                      </p>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+      
+      {/* Testimonial - Enhanced */}
+      {project.testimonial && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-gradient-to-b from-dark-950 to-dark-900">
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, type: "spring" }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="card-glass-heavy rounded-2xl sm:rounded-3xl p-8 sm:p-12 backdrop-blur-xl text-center">
+                <Quote className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-6 sm:mb-8 text-accent-purple opacity-50" />
+                
+                <p className="text-xl sm:text-2xl lg:text-3xl text-white font-medium mb-6 sm:mb-8 leading-relaxed">
+                  "{project.testimonial.content}"
+                </p>
+                
+                {/* Rating */}
+                {project.testimonial.rating && (
+                  <div className="flex justify-center gap-1 mb-4 sm:mb-6">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                          i < project.testimonial!.rating! 
+                            ? 'text-accent-amber fill-accent-amber' 
+                            : 'text-gray-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                {/* Author */}
+                <div>
+                  <div className="text-lg sm:text-xl font-bold text-white mb-1">
+                    {project.testimonial.author}
+                  </div>
+                  <div className="text-sm sm:text-base text-gray-400">
+                    {project.testimonial.role}
+                    {project.testimonial.company && (
+                      <span> • {project.testimonial.company}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+      
+      {/* Related Projects - Enhanced */}
+      {relatedProjects.length > 0 && (
+        <section className="py-16 sm:py-20 lg:py-32 bg-dark-950">
+          <div className="container">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <motion.div 
+                variants={itemVariants}
+                className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto"
+              >
+                <h2 className="text-3xl sm:text-4xl lg:text-display-lg xl:text-display-xl font-display font-bold text-white mb-6">
+                  פרויקטים דומים
+                </h2>
+                <p className="text-gray-400 text-base sm:text-lg lg:text-xl">
+                  עבודות נוספות שעשויות לעניין אתכם
+                </p>
+              </motion.div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {relatedProjects.map((relatedProject) => (
+                  <motion.div 
+                    key={relatedProject.id} 
+                    variants={itemVariants}
+                    whileHover={{ y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Link href={`/portfolio/${relatedProject.slug}`} className="block group">
+                      <div className="card-glass-heavy rounded-2xl sm:rounded-3xl overflow-hidden backdrop-blur-xl">
+                        {/* Thumbnail */}
+                        <div className="relative h-40 sm:h-48 overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-900/80 z-10" />
+                          <Image
+                            src={relatedProject.thumbnail}
+                            alt={relatedProject.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                        </div>
+                        
+                        {/* Content */}
+                        <div className="p-4 sm:p-6">
+                          <div className="mb-3">
+                            <p className="text-xs text-accent-purple font-medium mb-1">
+                              {relatedProject.client}
+                            </p>
+                            <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-accent-purple transition-colors">
+                              {relatedProject.title}
+                            </h3>
+                          </div>
+                          <p className="text-gray-400 text-sm line-clamp-2 mb-4">
+                            {relatedProject.description}
+                          </p>
+                          <div className="flex items-center gap-2 text-accent-purple font-medium text-sm">
+                            צפה בפרויקט
+                            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+              
+              <div className="text-center mt-8 sm:mt-12">
+                <Link href="/portfolio">
+                  <button className="btn-glass">
+                    <span className="flex items-center gap-3">
+                      <ArrowRight className="w-5 h-5" />
+                      חזרה לתיק עבודות
+                    </span>
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+      
+      {/* CTA Section */}
+      <CTA />
+
+      {/* Image Modal/Lightbox */}
+      <AnimatePresence>
+        {showImageModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+            onClick={() => setShowImageModal(false)}
+          >
+            <div className="relative max-w-6xl max-h-full w-full">
+              <Image
+                src={project.images[selectedImage].src}
+                alt={project.images[selectedImage].alt}
+                width={1200}
+                height={800}
+                className="object-contain w-full h-full"
+                priority
+              />
+              
+              {/* Close button */}
+              <button
+                onClick={() => setShowImageModal(false)}
+                className="absolute top-4 right-4 btn-glass p-3"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              {/* Navigation in modal */}
+              {project.images.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 btn-glass p-3"
+                    disabled={selectedImage === 0}
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  
+                  <button
+                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 btn-glass p-3"
+                    disabled={selectedImage === project.images.length - 1}
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 card-glass px-4 py-2 rounded-full">
+                <span className="text-white text-sm">
+                  {selectedImage + 1} מתוך {project.images.length}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Demo Video Modal */}
+      <AnimatePresence>
+        {isPlaying && project.demoUrl && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          >
+            <div className="relative max-w-4xl w-full aspect-video">
+              <iframe
+                src={project.demoUrl}
+                className="w-full h-full rounded-2xl"
+                allowFullScreen
+                title={`${project.title} Demo`}
+              />
+              <button
+                onClick={() => setIsPlaying(false)}
+                className="absolute top-4 right-4 btn-glass p-3"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
