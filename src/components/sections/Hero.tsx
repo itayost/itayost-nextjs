@@ -1,8 +1,8 @@
-// src/components/sections/Hero.tsx
+// Src/components/sections/Hero.tsx
 'use client';
 
-import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useState, useEffect } from 'react';
 
 // Dynamic 3D Scene import

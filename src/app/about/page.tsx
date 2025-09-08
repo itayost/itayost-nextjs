@@ -1,6 +1,6 @@
 // src/app/about/page.tsx
 'use client';
-
+// Import all  About components
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { AnimatePresence, motion } from 'framer-motion';

@@ -1,0 +1,12 @@
+@@ -2,1 +2,1 @@
+-import { Metadata } from 'next';
++import {Metadata } from 'next';
+@@ -5,1 +5,1 @@
+-import AboutHero from '@/components/sections/about/AboutHero';
++import AboutHero from "@/components/sections/about/AboutHero";
+@@ -6,1 +6,1 @@
+-import AboutBio from '@/components/sections/about/AboutBio';
++import AboutBio from "@/components/sections/about/AboutBio";
+@@ -7,1 +7,1 @@
+-import AboutSkills from '@/components/sections/about/AboutSkills';
++import AboutSkills from "@/components/sections/about/AboutSkills";

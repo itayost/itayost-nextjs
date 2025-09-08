@@ -1,5 +1,5 @@
 // src/components/about/AboutProcess.tsx
-'use client';
+"use client";
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState } from 'react';

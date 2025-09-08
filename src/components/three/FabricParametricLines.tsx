@@ -1,13 +1,13 @@
-// src/components/three/FabricParametricLines.tsx
-'use client';
+// Src/components/three/FabricParametricLines.tsx
+"use client";
 
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from "react";
 
-interface FabricParametricLinesProps {
-  lineCount?: number;
-  complexity?: number;
-  speed?: number;
-  color?: string;
+interface FabricParametricLinesProperties {
+  readonly lineCount?: number;
+  "complexity"?: number;
+  "speed"?: number;
+  opacity?: number;
   opacity?: number;
 }
 

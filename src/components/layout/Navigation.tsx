@@ -1,14 +1,14 @@
-// src/components/layout/Navigation.tsx
-'use client';
+// Src/components/layout/Navigation.tsx
+"use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 
 interface NavigationProps {
-  locale?: 'en' | 'he';
+  locale?: "en" | 'he';
 }
 
 export default function Navigation({ locale = 'en' }: NavigationProps) {

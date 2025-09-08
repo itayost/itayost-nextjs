@@ -1,7 +1,7 @@
 // src/components/sections/contact/ContactForm.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
@@ -288,7 +288,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="text"
                     value={formData.firstName}
-                    onChange={(e) => handleChange('firstName', e.target.value)}
+                    onChange={(e) => { handleChange('firstName', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className={cn(
                       "w-full px-5 py-4 bg-dark-900/50 border rounded-2xl",
@@ -317,7 +317,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="text"
                     value={formData.lastName}
-                    onChange={(e) => handleChange('lastName', e.target.value)}
+                    onChange={(e) => { handleChange('lastName', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className={cn(
                       "w-full px-5 py-4 bg-dark-900/50 border rounded-2xl",
@@ -347,7 +347,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
+                    onChange={(e) => { handleChange('email', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className={cn(
                       "w-full px-5 py-4 bg-dark-900/50 border rounded-2xl",
@@ -378,7 +378,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => handleChange('phone', e.target.value)}
+                    onChange={(e) => { handleChange('phone', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className={cn(
                       "w-full px-5 py-4 bg-dark-900/50 border rounded-2xl",
@@ -409,7 +409,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="text"
                     value={formData.company}
-                    onChange={(e) => handleChange('company', e.target.value)}
+                    onChange={(e) => { handleChange('company', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 hover:border-gray-600"
                     placeholder="שם החברה"
@@ -424,7 +424,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="text"
                     value={formData.position}
-                    onChange={(e) => handleChange('position', e.target.value)}
+                    onChange={(e) => { handleChange('position', e.target.value); }}
                     onFocus={() => setCurrentStep(1)}
                     className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 hover:border-gray-600"
                     placeholder="מנהל שיווק"
@@ -500,7 +500,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   </label>
                   <textarea
                     value={formData.projectDescription}
-                    onChange={(e) => handleChange('projectDescription', e.target.value)}
+                    onChange={(e) => { handleChange('projectDescription', e.target.value); }}
                     onFocus={() => setCurrentStep(2)}
                     rows={5}
                     className={cn(
@@ -531,7 +531,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                     </label>
                     <select
                       value={formData.budget || ''}
-                      onChange={(e) => handleChange('budget', e.target.value as ProjectBudget || undefined)}
+                      onChange={(e) => { handleChange('budget', e.target.value as ProjectBudget || undefined); }}
                       onFocus={() => setCurrentStep(2)}
                       className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 hover:border-gray-600"
                     >
@@ -551,7 +551,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                     </label>
                     <select
                       value={formData.timeline || ''}
-                      onChange={(e) => handleChange('timeline', e.target.value as ProjectTimeline || undefined)}
+                      onChange={(e) => { handleChange('timeline', e.target.value as ProjectTimeline || undefined); }}
                       onFocus={() => setCurrentStep(2)}
                       className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 hover:border-gray-600"
                     >
@@ -589,7 +589,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   <input
                     type="text"
                     value={formData.referralSource}
-                    onChange={(e) => handleChange('referralSource', e.target.value)}
+                    onChange={(e) => { handleChange('referralSource', e.target.value); }}
                     onFocus={() => setCurrentStep(3)}
                     className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 hover:border-gray-600"
                     placeholder="גוגל, המלצה, פייסבוק..."
@@ -602,7 +602,7 @@ export default function ContactForm({ className }: ContactFormProps) {
                   </label>
                   <textarea
                     value={formData.message}
-                    onChange={(e) => handleChange('message', e.target.value)}
+                    onChange={(e) => { handleChange('message', e.target.value); }}
                     onFocus={() => setCurrentStep(3)}
                     rows={4}
                     className="w-full px-5 py-4 bg-dark-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-200 resize-none hover:border-gray-600"

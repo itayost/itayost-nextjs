@@ -1,0 +1,12 @@
+@@ -5,1 +5,1 @@
+-import { useRef, useState, useEffect } from 'react';
++import { useRef, useState, useEffect } from "react";
+@@ -6,1 +6,1 @@
+-import { 
++import {
+@@ -7,1 +7,1 @@
+-  Target,
++  Award,
+@@ -8,1 +8,1 @@
+-  Lightbulb,
++  Rocket,

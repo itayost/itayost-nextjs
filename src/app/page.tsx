@@ -1,10 +1,10 @@
 // src/app/page.tsx
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { motion, AnimatePresence } from 'framer-motion';
-
+import {useState, useEffect } from 'react';
+import dynamic from "next/dynamic";
+import { AnimatePresence, motion } from 'framer-motion';
+// Component imports
 // Component imports
 import Footer from '@/components/layout/Footer';
 

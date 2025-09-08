@@ -1,14 +1,14 @@
-// src/components/sections/Contact.tsx
-'use client';
+// Src/components/sections/Contact.tsx
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
 
-interface ContactProps {
-  locale?: 'en' | 'he';
+import {motion } from 'framer-motion';
+import { useState } from "react";
+
+interface ContactProperties {
+  locale?: "en" | 'he';
 }
 
-export default function Contact({ locale = 'en' }: ContactProps) {
+export default function Contact({locale = 'en' }: ContactProps) {
   const isRTL = locale === 'he';
   const [hoveredField, setHoveredField] = useState<string | null>(null);
   const [formData, setFormData] = useState({

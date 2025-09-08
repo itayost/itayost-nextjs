@@ -1,0 +1,6 @@
+@@ -619,1 +619,1 @@
+-                  onChange={(e) => handleChange('newsletter', e.target.checked)}
++                  onChange={(e) => { handleChange('newsletter', e.target.checked); }}
+@@ -631,1 +631,1 @@
+-                  onChange={(e) => handleChange('agreeToTerms', e.target.checked)}
++                  onChange={(e) => { handleChange('agreeToTerms', e.target.checked); }}

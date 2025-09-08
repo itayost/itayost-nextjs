@@ -1,9 +1,9 @@
 // Minimal Specialized Generative Components - Fabric.vc Style
-'use client';
+"use client";
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect } from "react";
 
-// === MINIMAL SERVICES SECTION ICON ===
+/**
 export function MinimalServicesIcon({ className = "", serviceIndex = 0 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 

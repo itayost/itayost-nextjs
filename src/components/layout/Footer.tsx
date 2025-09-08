@@ -6,8 +6,7 @@ import Link from 'next/link';
 import { Mail, Phone, MapPin, Github, Linkedin, Twitter, ArrowUpRight } from 'lucide-react';
 
 interface FooterProps {
-  locale?: 'en' | 'he';
-}
+  readonly locale?: 'en' | 'he';}
 
 export default function Footer({ locale = 'en' }: FooterProps) {
   const isRTL = locale === 'he';
