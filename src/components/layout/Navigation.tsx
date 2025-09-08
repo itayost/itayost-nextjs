@@ -2,11 +2,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
-import { useState, useEffect } from 'react';
->>>>>>> parent of 6ee9f17 (ok)
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';

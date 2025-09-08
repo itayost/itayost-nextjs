@@ -288,6 +288,3 @@ export function ConfirmModal({
     </Modal>
   );
 }
-
-export { Modal, ModalFooter, ConfirmModal };
-export type { ModalProps, ModalFooterProps, ConfirmModalProps };

@@ -192,17 +192,12 @@ export default function ServicesPage() {
         
         {/* Service Grid Section */}
         <ServiceGrid 
-          locale={locale}
-          selectedService={selectedService}
-          setSelectedService={setSelectedService}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
         />
         
         {/* Features Section */}
         <ServiceFeatures 
           locale={locale}
-          selectedService={selectedService}
+          
         />
         
         {/* Process Section */}

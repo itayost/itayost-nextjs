@@ -1,158 +1,119 @@
-// src/components/three/ThreeScene.tsx - Fixed with proper TypeScript types
+// src/components/three/ThreeScene.tsx
 
 "use client";
 
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 
-// Props interface for ThreeScene
-interface ThreeSceneProps {
-  width?: number;
-  height?: number;
-  meshColor?: string;
-  rotationSpeed?: number;
-}
-
-export function ThreeScene({ 
-  width = 800, 
-  height = 600, 
-  meshColor = "#00D9FF",
-  rotationSpeed = 0.01 
-}: ThreeSceneProps) {
+export default function ThreeScene() {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const meshRef = useRef<THREE.Mesh | null>(null);
-  const animationIdRef = useRef<number | null>(null);
+  const frameRef = useRef<number>(0);
 
   useEffect(() => {
     if (!mountRef.current) return;
 
     // Scene setup
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
     sceneRef.current = scene;
 
     // Camera setup
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
     camera.position.z = 5;
-    cameraRef.current = camera;
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
-      antialias: true 
+      antialias: true,
+      alpha: true 
     });
-    renderer.setSize(width, height);
-    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     rendererRef.current = renderer;
-
-    // Generate unique mesh geometry
-    const generateUniqueGeometry = (): THREE.BufferGeometry => {
-      const complexity = Math.floor(Math.random() * 3) + 1;
-      
-      const geometries: THREE.BufferGeometry[] = [
-        new THREE.IcosahedronGeometry(2, complexity),
-        new THREE.OctahedronGeometry(2, complexity),
-        new THREE.TetrahedronGeometry(2, complexity),
-        new THREE.DodecahedronGeometry(2, complexity),
-      ];
-      
-      return geometries[Math.floor(Math.random() * geometries.length)];
-    };
+    
+    // Add to DOM
+    const currentMount = mountRef.current;
+    currentMount.appendChild(renderer.domElement);
 
     // Create generative mesh
-    const geometry = generateUniqueGeometry();
+    const geometry = new THREE.IcosahedronGeometry(2, 1);
     const material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(meshColor),
+      color: 0x00D9FF,
       wireframe: true,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.3,
     });
-
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
-    meshRef.current = mesh;
-
-    // Add to DOM
-    mountRef.current.appendChild(renderer.domElement);
 
     // Animation loop
-    const animate = (): void => {
-      if (!meshRef.current || !rendererRef.current || !cameraRef.current) return;
+    const animate = () => {
+      frameRef.current = requestAnimationFrame(animate);
 
-      meshRef.current.rotation.x += rotationSpeed;
-      meshRef.current.rotation.y += rotationSpeed * 0.5;
-      meshRef.current.rotation.z += rotationSpeed * 0.3;
+      // Rotate mesh
+      mesh.rotation.x += 0.001;
+      mesh.rotation.y += 0.002;
 
-      rendererRef.current.render(sceneRef.current!, cameraRef.current);
-      animationIdRef.current = requestAnimationFrame(animate);
+      // Morph vertices
+      const time = Date.now() * 0.001;
+      const positions = geometry.attributes.position;
+      
+      for (let i = 0; i < positions.count; i++) {
+        const x = positions.getX(i);
+        const y = positions.getY(i);
+        const z = positions.getZ(i);
+        
+        const noise = Math.sin(x * 2 + time) * 0.1;
+        const vector = new THREE.Vector3(x, y, z);
+        vector.normalize().multiplyScalar(2 + noise);
+        
+        positions.setXYZ(i, vector.x, vector.y, vector.z);
+      }
+      
+      positions.needsUpdate = true;
+
+      renderer.render(scene, camera);
     };
 
     animate();
 
     // Handle resize
-    const handleResize = (): void => {
-      if (!cameraRef.current || !rendererRef.current || !mountRef.current) return;
-      
-      const newWidth = mountRef.current.clientWidth;
-      const newHeight = mountRef.current.clientHeight;
-      
-      cameraRef.current.aspect = newWidth / newHeight;
-      cameraRef.current.updateProjectionMatrix();
-      rendererRef.current.setSize(newWidth, newHeight);
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup function
+    // Cleanup
     return () => {
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
-      
+      cancelAnimationFrame(frameRef.current);
       window.removeEventListener("resize", handleResize);
       
-      if (mountRef.current && rendererRef.current) {
-        mountRef.current.removeChild(rendererRef.current.domElement);
-      }
+      // Dispose of Three.js resources
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
       
-      if (rendererRef.current) {
-        rendererRef.current.dispose();
-      }
-      
-      if (meshRef.current) {
-        if (meshRef.current.geometry) {
-          meshRef.current.geometry.dispose();
-        }
-        if (meshRef.current.material instanceof THREE.Material) {
-          meshRef.current.material.dispose();
-        }
+      // Remove from DOM
+      if (currentMount && renderer.domElement) {
+        currentMount.removeChild(renderer.domElement);
       }
     };
-  }, [width, height, meshColor, rotationSpeed]);
+  }, []);
 
   return (
-    <div
-      ref={mountRef}
-      className="w-full h-full"
-      style={{ width, height }}
+    <div 
+      ref={mountRef} 
+      className="fixed inset-0 -z-10 pointer-events-none"
+      style={{ background: "transparent" }}
     />
   );
-}
-
-// Additional component for mobile-optimized mesh
-interface MobileMeshProps {
-  isMobile?: boolean;
-}
-
-export function ResponsiveMesh({ isMobile = false }: MobileMeshProps) {
-  const config = {
-    width: isMobile ? 300 : 800,
-    height: isMobile ? 300 : 600,
-    rotationSpeed: isMobile ? 0.005 : 0.01,
-    meshColor: "#00D9FF"
-  };
-
-  return <ThreeScene {...config} />;
 }

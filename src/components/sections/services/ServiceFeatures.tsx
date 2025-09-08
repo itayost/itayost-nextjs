@@ -1,284 +1,224 @@
 // src/components/sections/services/ServiceFeatures.tsx
-'use client';
 
-import { motion } from 'framer-motion';
-import { CheckCircle, Zap, Shield, TrendingUp, Code2, Smartphone, Palette, Cloud } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
 
-interface ServiceFeaturesProps {
-  locale: 'en' | 'he';
-  selectedService?: string | null;
+interface Feature {
+  id: string;
+  title: string;
+  titleHe: string;
+  description: string;
+  descriptionHe: string;
+  icon?: React.ReactNode;
 }
 
-export default function ServiceFeatures({ locale, selectedService }: ServiceFeaturesProps) {
-  const isRTL = locale === 'he';
+interface ServiceFeaturesProps {
+  serviceId?: string;
+  locale?: "en" | "he";
+}
 
-  // Define features for each service or show general features
-  const getFeatures = () => {
-    if (!selectedService || selectedService === 'all') {
-      // General features when no specific service is selected
-      return {
-        title: locale === 'en' ? 'Why Choose Us' : 'למה לבחור בנו',
-        subtitle: locale === 'en' ? '04 — Features' : '04 — תכונות',
-        items: [
-          {
-            icon: Code2,
-            title: locale === 'en' ? 'Clean Code' : 'קוד נקי',
-            description: locale === 'en' 
-              ? 'Modern, maintainable code following best practices'
-              : 'קוד מודרני וקל לתחזוקה לפי הסטנדרטים הגבוהים ביותר'
-          },
-          {
-            icon: Zap,
-            title: locale === 'en' ? 'Lightning Fast' : 'מהירות בזק',
-            description: locale === 'en'
-              ? 'Optimized performance for exceptional user experience'
-              : 'ביצועים מותאמים לחוויית משתמש יוצאת דופן'
-          },
-          {
-            icon: Shield,
-            title: locale === 'en' ? 'Secure & Reliable' : 'מאובטח ואמין',
-            description: locale === 'en'
-              ? 'Enterprise-grade security and 99.9% uptime'
-              : 'אבטחה ברמה ארגונית וזמינות של 99.9%'
-          },
-          {
-            icon: TrendingUp,
-            title: locale === 'en' ? 'Scalable Solutions' : 'פתרונות ניתנים להרחבה',
-            description: locale === 'en'
-              ? 'Built to grow with your business needs'
-              : 'בנוי לגדול יחד עם הצרכים העסקיים שלכם'
-          },
-          {
-            icon: Smartphone,
-            title: locale === 'en' ? 'Mobile First' : 'מובייל תחילה',
-            description: locale === 'en'
-              ? 'Responsive design that works on all devices'
-              : 'עיצוב רספונסיבי שעובד על כל המכשירים'
-          },
-          {
-            icon: Cloud,
-            title: locale === 'en' ? 'Cloud Native' : 'ענן מקורי',
-            description: locale === 'en'
-              ? 'Modern cloud infrastructure for maximum flexibility'
-              : 'תשתית ענן מודרנית לגמישות מקסימלית'
-          }
-        ]
-      };
-    }
+// Feature database with proper typing
+const featuresDatabase: Record<string, Feature[]> = {
+  "web-development": [
+    {
+      id: "responsive",
+      title: "Responsive Design",
+      titleHe: "עיצוב רספונסיבי",
+      description: "Pixel-perfect on all devices",
+      descriptionHe: "מושלם בכל מכשיר",
+    },
+    {
+      id: "performance",
+      title: "High Performance",
+      titleHe: "ביצועים גבוהים",
+      description: "Lightning-fast loading times",
+      descriptionHe: "זמני טעינה מהירים",
+    },
+    {
+      id: "seo",
+      title: "SEO Optimized",
+      titleHe: "מותאם SEO",
+      description: "Built for search engines",
+      descriptionHe: "בנוי למנועי חיפוש",
+    },
+  ],
+  "mobile-development": [
+    {
+      id: "cross-platform",
+      title: "Cross Platform",
+      titleHe: "מולטי פלטפורמה",
+      description: "iOS and Android from one codebase",
+      descriptionHe: "iOS ואנדרואיד מקוד אחד",
+    },
+    {
+      id: "native-performance",
+      title: "Native Performance",
+      titleHe: "ביצועים נייטיב",
+      description: "Smooth 60fps animations",
+      descriptionHe: "אנימציות חלקות ב-60fps",
+    },
+    {
+      id: "offline-first",
+      title: "Offline First",
+      titleHe: "עובד אופליין",
+      description: "Works without internet connection",
+      descriptionHe: "עובד ללא חיבור אינטרנט",
+    },
+  ],
+  "ui-ux-design": [
+    {
+      id: "user-research",
+      title: "User Research",
+      titleHe: "מחקר משתמשים",
+      description: "Data-driven design decisions",
+      descriptionHe: "החלטות עיצוב מבוססות נתונים",
+    },
+    {
+      id: "prototyping",
+      title: "Rapid Prototyping",
+      titleHe: "פרוטוטייפ מהיר",
+      description: "Interactive mockups for testing",
+      descriptionHe: "אב טיפוס אינטראקטיבי לבדיקה",
+    },
+    {
+      id: "design-systems",
+      title: "Design Systems",
+      titleHe: "מערכות עיצוב",
+      description: "Consistent brand experience",
+      descriptionHe: "חוויית מותג עקבית",
+    },
+  ],
+};
 
-    // Specific features based on selected service
-    const serviceFeatures = {
-      web: {
-        title: locale === 'en' ? 'Web Development Features' : 'תכונות פיתוח אתרים',
-        subtitle: locale === 'en' ? '04 — Web Features' : '04 — תכונות אתרים',
-        items: [
-          {
-            icon: Code2,
-            title: locale === 'en' ? 'React & Next.js' : 'React & Next.js',
-            description: locale === 'en'
-              ? 'Built with modern frameworks for optimal performance'
-              : 'בנוי עם פריימוורקים מודרניים לביצועים אופטימליים'
-          },
-          {
-            icon: Palette,
-            title: locale === 'en' ? 'Custom Design' : 'עיצוב מותאם אישית',
-            description: locale === 'en'
-              ? 'Unique designs tailored to your brand'
-              : 'עיצובים ייחודיים המותאמים למותג שלכם'
-          },
-          {
-            icon: Shield,
-            title: locale === 'en' ? 'SEO Optimized' : 'מותאם לקידום אתרים',
-            description: locale === 'en'
-              ? 'Built-in SEO best practices for better visibility'
-              : 'פרקטיקות SEO מובנות לנראות טובה יותר'
-          }
-        ]
-      },
-      mobile: {
-        title: locale === 'en' ? 'Mobile App Features' : 'תכונות אפליקציות',
-        subtitle: locale === 'en' ? '04 — Mobile Features' : '04 — תכונות מובייל',
-        items: [
-          {
-            icon: Smartphone,
-            title: locale === 'en' ? 'Cross Platform' : 'חוצה פלטפורמות',
-            description: locale === 'en'
-              ? 'One codebase for iOS and Android'
-              : 'קוד אחד ל-iOS ו-Android'
-          },
-          {
-            icon: Zap,
-            title: locale === 'en' ? 'Native Performance' : 'ביצועים מקוריים',
-            description: locale === 'en'
-              ? 'Smooth 60fps animations and interactions'
-              : 'אנימציות ואינטראקציות חלקות ב-60fps'
-          },
-          {
-            icon: Cloud,
-            title: locale === 'en' ? 'Offline Support' : 'תמיכה אופליין',
-            description: locale === 'en'
-              ? 'Works seamlessly without internet connection'
-              : 'עובד בצורה חלקה גם ללא חיבור לאינטרנט'
-          }
-        ]
-      },
-      design: {
-        title: locale === 'en' ? 'Design Features' : 'תכונות עיצוב',
-        subtitle: locale === 'en' ? '04 — Design Features' : '04 — תכונות עיצוב',
-        items: [
-          {
-            icon: Palette,
-            title: locale === 'en' ? 'User Research' : 'מחקר משתמשים',
-            description: locale === 'en'
-              ? 'Data-driven design decisions'
-              : 'החלטות עיצוב מבוססות נתונים'
-          },
-          {
-            icon: Zap,
-            title: locale === 'en' ? 'Rapid Prototyping' : 'אב טיפוס מהיר',
-            description: locale === 'en'
-              ? 'Quick iterations and feedback loops'
-              : 'איטרציות מהירות ולולאות משוב'
-          },
-          {
-            icon: CheckCircle,
-            title: locale === 'en' ? 'Design Systems' : 'מערכות עיצוב',
-            description: locale === 'en'
-              ? 'Consistent and scalable design language'
-              : 'שפת עיצוב עקבית וניתנת להרחבה'
-          }
-        ]
-      },
-      cloud: {
-        title: locale === 'en' ? 'Cloud Features' : 'תכונות ענן',
-        subtitle: locale === 'en' ? '04 — Cloud Features' : '04 — תכונות ענן',
-        items: [
-          {
-            icon: Cloud,
-            title: locale === 'en' ? 'Auto Scaling' : 'התאמה אוטומטית',
-            description: locale === 'en'
-              ? 'Automatically scale based on demand'
-              : 'התאמה אוטומטית על פי הביקוש'
-          },
-          {
-            icon: Shield,
-            title: locale === 'en' ? 'Security First' : 'אבטחה תחילה',
-            description: locale === 'en'
-              ? 'Enterprise-grade security measures'
-              : 'אמצעי אבטחה ברמה ארגונית'
-          },
-          {
-            icon: TrendingUp,
-            title: locale === 'en' ? 'Cost Optimization' : 'אופטימיזציית עלויות',
-            description: locale === 'en'
-              ? 'Pay only for what you use'
-              : 'שלמו רק על מה שאתם משתמשים'
-          }
-        ]
-      }
-    };
+function getFeatures(serviceId: string, locale: string): Feature[] {
+  const features = featuresDatabase[serviceId] || [];
+  
+  // Transform features based on locale
+  return features.map(feature => ({
+    id: feature.id,
+    title: locale === "he" ? feature.titleHe : feature.title,
+    description: locale === "he" ? feature.descriptionHe : feature.description,
+    icon: feature.icon,
+    titleHe: feature.titleHe,
+    descriptionHe: feature.descriptionHe,
+  }));
+}
 
-    return serviceFeatures[selectedService as keyof typeof serviceFeatures] || getFeatures();
-  };
+export default function ServiceFeatures({ 
+  serviceId = "web-development", 
+  locale = "en" 
+}: ServiceFeaturesProps) {
+  const features = getFeatures(serviceId, locale);
+  const isRTL = locale === "he";
 
-  const features = getFeatures();
+  if (features.length === 0) {
+    return null;
+  }
 
   return (
-    <section 
-      id="features"
-      className="relative py-32 bg-black"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 100px,
-            #00D9FF 100px,
-            #00D9FF 101px
-          )`
-        }} />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+    <section className="py-32 bg-black">
+      <div className="max-w-7xl mx-auto px-8">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className={`mb-20 ${isRTL ? 'text-right' : 'text-left'}`}
-        >
-          <span className="text-cyan-400 text-sm uppercase tracking-wider">
-            {features.subtitle}
+        <div className={`mb-16 ${isRTL ? "text-right" : "text-left"}`}>
+          <span className="text-caption text-cyan-400 uppercase tracking-wider">
+            {locale === "he" ? "תכונות" : "Features"}
           </span>
-          <h2 className="text-display mt-4">
-            <span className="text-white">{features.title}</span>
+          <h2 className="text-display font-bold mt-4">
+            {locale === "he" ? "מה אנחנו" : "What We"}{" "}
+            <span className="text-outline">
+              {locale === "he" ? "מציעים" : "Offer"}
+            </span>
           </h2>
-        </motion.div>
-
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.items.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group relative"
-              >
-                {/* Card */}
-                <div className="relative p-8 bg-gray-900 border border-cyan-400/10 hover:border-cyan-400/30 transition-all duration-300">
-                  {/* Hover Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  {/* Icon */}
-                  <motion.div
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative z-10 w-16 h-16 mb-6"
-                  >
-                    <div className="absolute inset-0 bg-cyan-400/20 blur-xl" />
-                    <div className="relative w-full h-full border border-cyan-400/40 flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-cyan-400" />
-                    </div>
-                  </motion.div>
-
-                  {/* Content */}
-                  <h3 className="relative z-10 text-xl font-bold text-white mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="relative z-10 text-gray-400 leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  {/* Corner Decoration */}
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-400/20 group-hover:border-cyan-400/40 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-cyan-400/20 group-hover:border-cyan-400/40 transition-colors duration-300" />
-                </div>
-              </motion.div>
-            );
-          })}
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mt-20"
-        >
-          <button className="px-8 py-4 border border-cyan-400/40 text-gray-400 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 uppercase tracking-wider">
-            {locale === 'en' ? 'See All Features' : 'ראה את כל התכונות'}
-          </button>
-        </motion.div>
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <FeatureCard 
+              key={feature.id}
+              feature={feature}
+              index={index}
+              isRTL={isRTL}
+            />
+          ))}
+        </div>
       </div>
     </section>
+  );
+}
+
+// Feature Card Component
+interface FeatureCardProps {
+  feature: Feature;
+  index: number;
+  isRTL: boolean;
+}
+
+function FeatureCard({ feature, index, isRTL }: FeatureCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6 }}
+      className={`relative group ${isRTL ? "text-right" : "text-left"}`}
+    >
+      {/* Card Border Effect */}
+      <div className="absolute inset-0 border border-cyan-400/10 group-hover:border-cyan-400/30 transition-colors duration-300" />
+      
+      {/* Glow Effect on Hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/0 to-cyan-400/0 group-hover:from-cyan-400/5 group-hover:to-transparent transition-all duration-500" />
+      
+      {/* Content */}
+      <div className="relative p-8">
+        {/* Icon Placeholder - Can be replaced with actual icons */}
+        <div className="w-12 h-12 mb-6">
+          <div className="w-full h-full border border-cyan-400/40 relative">
+            <motion.div
+              className="absolute inset-0 bg-cyan-400/20"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </div>
+        </div>
+        
+        {/* Title */}
+        <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-cyan-400 transition-colors duration-300">
+          {feature.title}
+        </h3>
+        
+        {/* Description */}
+        <p className="text-gray-400 leading-relaxed">
+          {feature.description}
+        </p>
+        
+        {/* Learn More Link */}
+        <div className="mt-6">
+          <span className="inline-flex items-center text-sm text-cyan-400 hover-line cursor-pointer">
+            {isRTL ? "למד עוד" : "Learn more"}
+            <svg 
+              className={`w-4 h-4 ${isRTL ? "mr-1 rotate-180" : "ml-1"}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9 5l7 7-7 7" 
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </motion.div>
   );
 }
