@@ -1,243 +1,118 @@
-// components/ui/Input.tsx
-'use client';
+// src/components/ui/Input.tsx
 
-import { forwardRef, InputHTMLAttributes, useState } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import React, { forwardRef, useState } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
-  'w-full transition-all duration-300 ease-out font-medium placeholder:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed',
+  "w-full px-3 py-2 bg-black border text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 transition-all duration-200",
   {
     variants: {
       variant: {
-        default: 'bg-white border-2 border-slate-200 focus:border-emerald-400 focus:shadow-soft-sm',
-        glass: 'bg-white/80 backdrop-blur-xl border border-white/30 focus:border-emerald-400/50 focus:bg-white/90',
-        soft: 'bg-slate-50 border-2 border-transparent focus:bg-white focus:border-emerald-400 focus:shadow-soft-sm',
-        underline: 'bg-transparent border-b-2 border-slate-200 rounded-none px-0 focus:border-emerald-400',
-        filled: 'bg-gradient-to-r from-slate-50 to-slate-100 border-2 border-transparent focus:from-white focus:to-white focus:border-emerald-400',
+        default: "border-gray-700 focus:border-cyan-400 focus:ring-cyan-400/20",
+        ghost: "border-transparent bg-gray-900/50 focus:bg-gray-900",
+        outline: "border-cyan-400/30 focus:border-cyan-400",
       },
       size: {
-        sm: 'text-sm px-3 py-2 rounded-xl',
-        md: 'text-base px-4 py-3 rounded-2xl',
-        lg: 'text-lg px-5 py-4 rounded-3xl',
+        sm: "text-sm px-2 py-1",
+        md: "text-base px-3 py-2",
+        lg: "text-lg px-4 py-3",
       },
       state: {
-        default: '',
-        error: 'border-red-400 focus:border-red-500 focus:shadow-red-100',
-        success: 'border-green-400 focus:border-green-500 focus:shadow-green-100',
-        warning: 'border-amber-400 focus:border-amber-500 focus:shadow-amber-100',
+        default: "",
+        error: "border-red-500 focus:border-red-500 focus:ring-red-500/20",
+        success: "border-green-500 focus:border-green-500 focus:ring-green-500/20",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'md',
-      state: 'default',
+      variant: "default",
+      size: "md",
+      state: "default",
     },
   }
 );
 
-interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>,
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputVariants> {
   label?: string;
   error?: string;
-  success?: string;
-  warning?: string;
-  hint?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
   showPasswordToggle?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      state: stateProp,
-      label,
-      error,
-      success,
-      warning,
-      hint,
-      leftIcon,
-      rightIcon,
-      showPasswordToggle,
-      type = 'text',
-      disabled,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, variant, size, state, label, error, type, showPasswordToggle, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
+    const inputType = type === "password" && showPassword ? "text" : type;
     
-    // Determine state based on error/success/warning props
-    const state = error ? 'error' : success ? 'success' : warning ? 'warning' : stateProp;
-    const message = error || success || warning || hint;
-    
-    const inputType = showPasswordToggle && type === 'password' 
-      ? (showPassword ? 'text' : 'password')
-      : type;
-
     return (
       <div className="w-full">
         {label && (
-          <label className={cn(
-            'block text-sm font-medium mb-2 transition-colors',
-            isFocused ? 'text-emerald-600' : 'text-slate-700',
-            disabled && 'opacity-50'
-          )}>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             {label}
           </label>
         )}
-        
         <div className="relative">
-          {leftIcon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-              {leftIcon}
-            </div>
-          )}
-          
           <input
-            ref={ref}
             type={inputType}
-            disabled={disabled}
-            className={cn(
-              inputVariants({ variant, size, state }),
-              leftIcon && 'pl-10',
-              rightIcon && 'pr-10',
-              showPasswordToggle && type === 'password' && 'pr-10',
-              'outline-none focus:outline-none focus:ring-0',
-              className
-            )}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            className={cn(inputVariants({ variant, size, state: error ? "error" : state }), className)}
+            ref={ref}
             {...props}
           />
-          
-          {/* Password toggle button */}
-          {showPasswordToggle && type === 'password' && (
+          {type === "password" && showPasswordToggle && (
             <button
               type="button"
-              onClick={() => { setShowPassword(!showPassword); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyan-400"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? "Hide" : "Show"}
             </button>
           )}
-          
-          {/* Right icon or state icon */}
-          {!showPasswordToggle && (rightIcon || state !== 'default') && (
-            <div className={cn(
-              "absolute right-3 top-1/2 -translate-y-1/2",
-              state === 'error' && 'text-red-500',
-              state === 'success' && 'text-green-500',
-              state === 'warning' && 'text-amber-500',
-              !state && 'text-slate-400'
-            )}>
-              {rightIcon || (
-                <>
-                  {state === 'error' && <AlertCircle className="w-5 h-5" />}
-                  {state === 'success' && <CheckCircle className="w-5 h-5" />}
-                  {state === 'warning' && <AlertCircle className="w-5 h-5" />}
-                </>
-              )}
-            </div>
-          )}
         </div>
-        
-        {/* Message */}
-        {message && (
-          <p className={cn(
-            'text-sm mt-2',
-            error && 'text-red-500',
-            success && 'text-green-500',
-            warning && 'text-amber-500',
-            !error && !success && !warning && 'text-slate-500'
-          )}>
-            {message}
-          </p>
+        {error && (
+          <p className="mt-1 text-sm text-red-500">{error}</p>
         )}
       </div>
     );
   }
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
-// Textarea component using similar styling
-const Textarea = forwardRef<
-  HTMLTextAreaElement,
-  Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> & 
-  Omit<InputProps, 'type' | 'showPasswordToggle'>
->(
-  (
-    {
-      className,
-      variant = 'default',
-      size = 'md',
-      state: stateProp,
-      label,
-      error,
-      success,
-      warning,
-      hint,
-      disabled,
-      ...props
-    },
-    ref
-  ) => {
-    const [isFocused, setIsFocused] = useState(false);
-    const state = error ? 'error' : success ? 'success' : warning ? 'warning' : stateProp;
-    const message = error || success || warning || hint;
+// Textarea Component
+export interface TextareaProps
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "size">,
+    VariantProps<typeof inputVariants> {
+  label?: string;
+  error?: string;
+}
 
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, variant = "default", size = "md", state, label, error, ...props }, ref) => {
     return (
       <div className="w-full">
         {label && (
-          <label className={cn(
-            'block text-sm font-medium mb-2 transition-colors',
-            isFocused ? 'text-emerald-600' : 'text-slate-700',
-            disabled && 'opacity-50'
-          )}>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             {label}
           </label>
         )}
-        
         <textarea
-          ref={ref}
-          disabled={disabled}
           className={cn(
-            inputVariants({ variant, size, state }),
-            'min-h-[100px] resize-y',
-            'outline-none focus:outline-none focus:ring-0',
+            inputVariants({ variant, size, state: error ? "error" : state }),
+            "min-h-[100px] resize-y",
             className
           )}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          ref={ref}
           {...props}
         />
-        
-        {message && (
-          <p className={cn(
-            'text-sm mt-2',
-            error && 'text-red-500',
-            success && 'text-green-500',
-            warning && 'text-amber-500',
-            !error && !success && !warning && 'text-slate-500'
-          )}>
-            {message}
-          </p>
+        {error && (
+          <p className="mt-1 text-sm text-red-500">{error}</p>
         )}
       </div>
     );
   }
 );
 
-Textarea.displayName = 'Textarea';
+Textarea.displayName = "Textarea";
 
 export default Input;
-export { Input, Textarea, inputVariants };
-export type { InputProps };
