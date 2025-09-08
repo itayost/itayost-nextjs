@@ -57,7 +57,7 @@ export default function FabricParametricLines({
     let camera: any;
     let renderer: any;
     const lines: any[] = [];
-    let lineMaterials: any[] = [];
+    const lineMaterials: any[] = [];
 
     const initParametricScene = async () => {
       try {

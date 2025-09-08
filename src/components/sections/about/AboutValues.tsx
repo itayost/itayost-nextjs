@@ -1,255 +1,270 @@
+// src/components/about/AboutValues.tsx
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
-import { 
-  Target,
-  Lightbulb,
-  Users,
-  Rocket,
-  Shield,
-  Heart,
-  Zap,
-  Award
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-interface Value {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  gradient: string;
+interface AboutValuesProps {
+  locale?: 'en' | 'he';
 }
 
-const values: Value[] = [
-  {
-    id: 'innovation',
-    title: 'חדשנות',
-    description: 'תמיד מחפשים את הפתרון החדשני והיצירתי ביותר לכל אתגר',
-    icon: Lightbulb,
-    gradient: 'from-accent-purple to-accent-indigo'
-  },
-  {
-    id: 'quality',
-    title: 'איכות',
-    description: 'מחויבות לסטנדרטים הגבוהים ביותר בכל שורת קוד',
-    icon: Award,
-    gradient: 'from-accent-amber to-accent-yellow'
-  },
-  {
-    id: 'collaboration',
-    title: 'שיתוף פעולה',
-    description: 'עבודה צמודה עם הלקוחות להבנה מעמיקה של הצרכים',
-    icon: Users,
-    gradient: 'from-accent-blue to-accent-cyan'
-  },
-  {
-    id: 'growth',
-    title: 'צמיחה',
-    description: 'למידה מתמדת והתפתחות עם הטכנולוגיות החדשות',
-    icon: Rocket,
-    gradient: 'from-accent-emerald to-accent-cyan'
-  },
-  {
-    id: 'reliability',
-    title: 'אמינות',
-    description: 'עמידה בהתחייבויות ומתן שירות אמין לאורך זמן',
-    icon: Shield,
-    gradient: 'from-accent-violet to-accent-purple'
-  },
-  {
-    id: 'passion',
-    title: 'תשוקה',
-    description: 'אהבה אמיתית לטכנולוגיה ויצירה דיגיטלית',
-    icon: Heart,
-    gradient: 'from-accent-rose to-accent-pink'
-  }
-];
+export default function AboutValues({ locale = 'en' }: AboutValuesProps) {
+  const isRTL = locale === 'he';
+  const [activeValue, setActiveValue] = useState<number | null>(null);
+  const [hoveredMetric, setHoveredMetric] = useState<number | null>(null);
 
-export default function AboutValues() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoveredValue, setHoveredValue] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-  
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const x = (clientX - window.innerWidth / 2) / window.innerWidth;
-      const y = (clientY - window.innerHeight / 2) / window.innerHeight;
-      setMousePosition({ x, y });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => { window.removeEventListener('mousemove', handleMouseMove); };
-  }, []);
-  
+  const content = {
+    en: {
+      label: '02 — Core Values',
+      title: 'Principles That',
+      titleOutline: 'Define Us',
+      subtitle: 'These aren\'t just words on a wall. They\'re the code we live by.',
+      values: [
+        {
+          number: '001',
+          title: 'Obsessive Craftsmanship',
+          description: 'We spend hours perfecting animations that last milliseconds. Because details matter when you\'re building the extraordinary.',
+          metric: '∞',
+          metricLabel: 'Iterations',
+          examples: [
+            'Rewrote a component 47 times for perfect animation',
+            'Spent 3 days on a 200ms transition',
+            'Custom-built every single interaction'
+          ]
+        },
+        {
+          number: '002',
+          title: 'Radical Innovation',
+          description: 'If it\'s been done before, we\'re not interested. We push boundaries, break conventions, and redefine what\'s possible.',
+          metric: '0%',
+          metricLabel: 'Ordinary',
+          examples: [
+            'First to implement WebGL in e-commerce',
+            'Created impossible layouts that actually work',
+            'Built experiences that shouldn\'t exist'
+          ]
+        },
+        {
+          number: '003',
+          title: 'Human-First Technology',
+          description: 'Behind every line of code is a human experience. We build for people, not browsers.',
+          metric: '100%',
+          metricLabel: 'Empathy',
+          examples: [
+            'Accessibility is not optional',
+            'Performance for everyone, not just fiber users',
+            'Experiences that spark emotion'
+          ]
+        },
+        {
+          number: '004',
+          title: 'Sustainable Speed',
+          description: 'Fast doesn\'t mean rushed. We deliver at the speed of excellence, ensuring every project is built to last.',
+          metric: '<50ms',
+          metricLabel: 'Load Time',
+          examples: [
+            'Code that scales without breaking',
+            'Documentation that actually helps',
+            'Solutions that age like wine'
+          ]
+        }
+      ]
+    },
+    he: {
+      label: '02 — ערכי ליבה',
+      title: 'עקרונות',
+      titleOutline: 'שמגדירים אותנו',
+      subtitle: 'אלו לא סתם מילים על הקיר. זה הקוד שאנחנו חיים לפיו.',
+      // ... Hebrew translations
+      values: [] // Would include Hebrew translations
+    }
+  };
+
+  const text = content[locale];
+
   return (
-    <section ref={containerRef} className="relative py-32 lg:py-40 bg-dark-950 overflow-hidden">
-      {/* Background layers */}
+    <section 
+      className="py-32 bg-gray-900 relative overflow-hidden"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      {/* Background Pattern */}
       <div className="absolute inset-0">
-        {/* Gradient mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 via-transparent to-accent-indigo/5" />
-        
-        {/* Dot pattern */}
-        <div className="absolute inset-0 bg-dots opacity-10" />
-        
-        {/* Animated shapes */}
-        <motion.div style={{ y: parallaxY }} className="absolute inset-0 pointer-events-none">
-          <motion.div
-            animate={{
-              x: mousePosition.x * 30,
-              y: mousePosition.y * 30,
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="absolute top-1/3 -left-32 w-96 h-96"
-          >
-            <div className="w-full h-full shape-diamond bg-gradient-to-br from-accent-purple/10 to-accent-indigo/10 blur-3xl" />
-          </motion.div>
-          
-          <motion.div
-            animate={{
-              x: mousePosition.x * -20,
-              rotate: [0, 360],
-            }}
-            transition={{ 
-              x: { type: "spring", stiffness: 30, damping: 20 },
-              rotate: { duration: 30, repeat: Infinity, ease: "linear" }
-            }}
-            className="absolute bottom-1/3 -right-32 w-80 h-80"
-          >
-            <div className="w-full h-full shape-hexagon bg-gradient-to-tr from-accent-blue/10 to-accent-cyan/10 blur-3xl" />
-          </motion.div>
-        </motion.div>
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0, 217, 255, 0.15) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }}
+        />
       </div>
-      
-      <div className="container relative z-10">
-        {/* Section Header */}
+
+      {/* Floating Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-32 h-32 border border-cyan-400/10"
+            style={{
+              left: `${25 * i}%`,
+              top: `${20 + i * 15}%`,
+              transform: 'rotate(45deg)'
+            }}
+            animate={{
+              y: [0, -30, 0],
+              rotate: [45, 50, 45],
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              ease: 'easeInOut'
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="px-8 md:px-16 lg:px-32 max-w-[1400px] mx-auto relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl mx-auto mb-20"
+          className="text-center mb-16"
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full card-glass mb-10"
-          >
-            <Target className="w-5 h-5 text-accent-purple" />
-            <span className="text-sm font-semibold uppercase tracking-wider text-white/80">
-              הערכים שלנו
+          <span className="text-cyan-400 text-sm uppercase tracking-[0.2em] font-medium">
+            {text.label}
+          </span>
+          <h2 className="mt-4 mb-8">
+            <span className="text-white font-bold text-5xl md:text-6xl block mb-2">
+              {text.title}
             </span>
-          </motion.div>
-          
-          <h2 className="text-display-xl lg:text-display-2xl font-display font-bold mb-8">
-            <span className="block text-white">עקרונות</span>
-            <span className="block heading-gradient">מנחים</span>
+            <span 
+              className="font-bold text-5xl md:text-6xl"
+              style={{
+                WebkitTextStroke: '2px rgba(0, 217, 255, 0.5)',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              {text.titleOutline}
+            </span>
           </h2>
-          
-          <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto">
-            הערכים שמנחים אותנו בכל פרויקט, בכל החלטה ובכל שורת קוד שאנחנו כותבים
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            {text.subtitle}
           </p>
         </motion.div>
-        
+
         {/* Values Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {values.map((value, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          {text.values.map((value, index) => (
             <motion.div
-              key={value.id}
+              key={index}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              onMouseEnter={() => { setHoveredValue(value.id); }}
-              onMouseLeave={() => { setHoveredValue(null); }}
+              transition={{ delay: index * 0.1 }}
+              className="relative group"
+              onMouseEnter={() => setActiveValue(index)}
+              onMouseLeave={() => setActiveValue(null)}
             >
-              <ValueCard value={value} isHovered={hoveredValue === value.id} />
+              {/* Background Number */}
+              <div 
+                className="absolute -top-8 -left-4 text-8xl font-bold text-gray-800/20 select-none"
+                style={{ fontFamily: 'Space Grotesk, Inter, sans-serif' }}
+              >
+                {value.number}
+              </div>
+
+              {/* Content Card */}
+              <div className="relative bg-black/50 backdrop-blur-sm border border-gray-800 p-8 transition-all duration-300 hover:border-cyan-400/50">
+                {/* Metric Display */}
+                <div 
+                  className="absolute top-8 right-8 text-center cursor-pointer"
+                  onMouseEnter={() => setHoveredMetric(index)}
+                  onMouseLeave={() => setHoveredMetric(null)}
+                >
+                  <div className="text-3xl font-bold text-cyan-400 mb-1">
+                    {value.metric}
+                  </div>
+                  <div className="text-xs uppercase tracking-wider text-gray-500">
+                    {value.metricLabel}
+                  </div>
+                  
+                  {/* Metric Glow Effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-cyan-400/20 blur-xl -z-10"
+                    animate={{
+                      scale: hoveredMetric === index ? 1.5 : 1,
+                      opacity: hoveredMetric === index ? 0.3 : 0
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+
+                {/* Title */}
+                <h3 className="text-2xl font-bold text-white mb-4 pr-24">
+                  {value.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-400 mb-6 leading-relaxed">
+                  {value.description}
+                </p>
+
+                {/* Examples */}
+                <div className="space-y-2">
+                  {value.examples.map((example, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ 
+                        opacity: activeValue === index ? 1 : 0,
+                        x: activeValue === index ? 0 : -20
+                      }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="w-1 h-1 bg-cyan-400 rounded-full" />
+                      <span className="text-sm text-gray-500">
+                        {example}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Hover Border Animation */}
+                <motion.div
+                  className="absolute inset-0 border-2 border-cyan-400 pointer-events-none"
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{
+                    opacity: activeValue === index ? 0.2 : 0,
+                    scale: activeValue === index ? 1 : 1.05
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                {/* Corner Accents */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
             </motion.div>
           ))}
         </div>
-        
-        {/* Mission Statement */}
+
+        {/* Bottom Quote */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-20 text-center"
+          className="text-center mt-24"
         >
-          <div className="card-glass-heavy rounded-3xl p-12 max-w-4xl mx-auto backdrop-blur-2xl">
-            <Zap className="w-16 h-16 mx-auto mb-6 text-accent-purple" />
-            <h3 className="text-3xl font-bold text-white mb-6">
-              המשימה שלנו
-            </h3>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              ליצור פתרונות דיגיטליים חדשניים שמשנים את הדרך שבה עסקים פועלים ומתקשרים עם הלקוחות שלהם. 
-              אנחנו מאמינים שטכנולוגיה צריכה להיות נגישה, יפה ופשוטה לשימוש.
-            </p>
-          </div>
+          <p className="text-2xl text-gray-400 font-light">
+            We don&apos;t just follow these values.
+            <span className="text-cyan-400 font-bold"> We breathe them.</span>
+          </p>
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function ValueCard({ value, isHovered }: { value: Value; isHovered: boolean }) {
-  const Icon = value.icon;
-  
-  return (
-    <motion.div
-      whileHover={{ y: -10, scale: 1.02 }}
-      transition={{ duration: 0.3 }}
-      className="relative h-full group"
-    >
-      <div className="card-glass-heavy rounded-3xl p-8 h-full backdrop-blur-2xl">
-        {/* Background gradient on hover */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${value.gradient} opacity-5`}
-        />
-        
-        {/* Icon */}
-        <motion.div
-          animate={{ rotate: isHovered ? 360 : 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative mb-6"
-        >
-          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${value.gradient} p-4 shadow-xl relative`}>
-            <Icon className="w-full h-full text-white" />
-            {/* Glow effect */}
-            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${value.gradient} blur-xl opacity-50`} />
-          </div>
-        </motion.div>
-        
-        {/* Content */}
-        <h3 className="text-2xl font-bold text-white mb-3 relative z-10">
-          {value.title}
-        </h3>
-        
-        <p className="text-gray-400 leading-relaxed relative z-10">
-          {value.description}
-        </p>
-        
-        {/* Bottom line animation */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple to-transparent rounded-b-3xl"
-        />
-      </div>
-    </motion.div>
   );
 }

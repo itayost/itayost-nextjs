@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Component imports
-import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 
 // Dynamic imports for sections
@@ -164,8 +163,7 @@ export default function HomePage() {
       </AnimatePresence>
 
       <main className="bg-black min-h-screen">
-        {/* Navigation */}
-        <Navigation locale={locale} />
+        
         
         {/* Hero Section */}
         <Hero locale={locale} />

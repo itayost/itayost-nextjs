@@ -3,7 +3,6 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Image from 'next/image';
 
 interface WorkProps {
   locale?: 'en' | 'he';
@@ -162,7 +161,7 @@ export default function Work({ locale = 'en' }: WorkProps) {
                 lineHeight: '1',
                 WebkitTextStroke: '2px rgba(0, 217, 255, 0.5)',
                 WebkitTextFillColor: 'transparent',
-                textStroke: '2px rgba(0, 217, 255, 0.5)',
+               
                 color: 'transparent'
               }}
             >

@@ -1,346 +1,284 @@
+// src/components/about/AboutProcess.tsx
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
-import { 
-  Workflow,
-  ArrowRight,
-  Lightbulb,
-  PenTool,
-  Code2,
-  Rocket,
-  Users,
-  Settings,
-  CheckCircle,
-  Sparkles
-} from 'lucide-react';
-import Link from 'next/link';
+import { useRef, useState } from 'react';
 
-interface ProcessStep {
-  id: string;
-  step: number;
-  title: string;
-  titleEn?: string;
-  description: string;
-  icon: React.ElementType;
-  duration: string;
-  gradient: string;
-  tasks: string[];
+interface AboutProcessProps {
+  locale?: 'en' | 'he';
 }
 
-const processSteps: ProcessStep[] = [
-  {
-    id: 'discovery',
-    step: 1,
-    title: 'גילוי והבנה',
-    titleEn: 'Discovery',
-    description: 'הבנה מעמיקה של הצרכים, היעדים והאתגרים שלכם',
-    icon: Lightbulb,
-    duration: '2-3 ימים',
-    gradient: 'from-accent-purple to-accent-indigo',
-    tasks: ['ניתוח דרישות', 'מחקר שוק', 'הגדרת יעדים', 'תכנון ארכיטקטורה']
-  },
-  {
-    id: 'design',
-    step: 2,
-    title: 'עיצוב ותכנון',
-    titleEn: 'Design',
-    description: 'יצירת עיצוב ויזואלי וחוויית משתמש מושלמת',
-    icon: PenTool,
-    duration: '3-5 ימים',
-    gradient: 'from-accent-blue to-accent-cyan',
-    tasks: ['Wireframes', 'UI Design', 'Prototyping', 'User Testing']
-  },
-  {
-    id: 'development',
-    step: 3,
-    title: 'פיתוח',
-    titleEn: 'Development',
-    description: 'כתיבת קוד איכותי ובניית הפתרון המושלם',
-    icon: Code2,
-    duration: '2-4 שבועות',
-    gradient: 'from-accent-emerald to-accent-cyan',
-    tasks: ['Frontend', 'Backend', 'Database', 'API Integration']
-  },
-  {
-    id: 'testing',
-    step: 4,
-    title: 'בדיקות',
-    titleEn: 'Testing',
-    description: 'בדיקות מקיפות להבטחת איכות ואמינות',
-    icon: CheckCircle,
-    duration: '3-5 ימים',
-    gradient: 'from-accent-amber to-accent-yellow',
-    tasks: ['Unit Tests', 'Integration', 'Performance', 'Security']
-  },
-  {
-    id: 'deployment',
-    step: 5,
-    title: 'השקה',
-    titleEn: 'Launch',
-    description: 'העלאה לאוויר ווידוא שהכל עובד בצורה מושלמת',
-    icon: Rocket,
-    duration: '1-2 ימים',
-    gradient: 'from-accent-rose to-accent-amber',
-    tasks: ['Deployment', 'Monitoring', 'Optimization', 'Documentation']
-  },
-  {
-    id: 'support',
-    step: 6,
-    title: 'תמיכה',
-    titleEn: 'Support',
-    description: 'תמיכה שוטפת ושיפורים מתמשכים',
-    icon: Settings,
-    duration: 'מתמשך',
-    gradient: 'from-accent-violet to-accent-purple',
-    tasks: ['Maintenance', 'Updates', 'Scaling', 'Improvements']
-  }
-];
-
-export default function AboutProcess() {
-  const [activeStep, setActiveStep] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+export default function AboutProcess({ locale = 'en' }: AboutProcessProps) {
+  const isRTL = locale === 'he';
+  const [] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
-  
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const x = (clientX - window.innerWidth / 2) / window.innerWidth;
-      const y = (clientY - window.innerHeight / 2) / window.innerHeight;
-      setMousePosition({ x, y });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => { window.removeEventListener('mousemove', handleMouseMove); };
-  }, []);
-  
+
+  const lineHeight = useTransform(scrollYProgress, [0, 0.5, 1], ['0%', '50%', '100%']);
+
+  const content = {
+    en: {
+      label: '04 — How We Work',
+      title: 'The ITAYOST',
+      titleOutline: 'Method',
+      subtitle: 'From chaos to clarity in 4 phases',
+      phases: [
+        {
+          phase: 'Discovery',
+          number: '01',
+          duration: 'Week 1-2',
+          title: 'Deep Dive & Dream',
+          description: 'We don\'t just listen to your requirements. We become your business, understand your users, and dream bigger than you thought possible.',
+          activities: [
+            { name: 'Research', icon: '🔍', description: 'Market analysis & competitor deep dive' },
+            { name: 'Strategy', icon: '🎯', description: 'Define goals & success metrics' },
+            { name: 'Ideation', icon: '💡', description: 'Brainstorm without boundaries' },
+            { name: 'Concept', icon: '✨', description: 'Create the impossible' }
+          ],
+          deliverables: ['Project Brief', 'User Personas', 'Technical Spec', 'Creative Direction'],
+          color: 'from-cyan-400/20 to-transparent'
+        },
+        {
+          phase: 'Design',
+          number: '02',
+          duration: 'Week 3-6',
+          title: 'Pixels & Prototypes',
+          description: 'This is where magic happens. We transform abstract ideas into tangible experiences that make people say "wow".',
+          activities: [
+            { name: 'Wireframes', icon: '📐', description: 'Structure the experience' },
+            { name: 'Visual Design', icon: '🎨', description: 'Create stunning interfaces' },
+            { name: 'Prototypes', icon: '🔄', description: 'Make it interactive' },
+            { name: 'Motion', icon: '✨', description: 'Add life to every pixel' }
+          ],
+          deliverables: ['Design System', 'Interactive Prototypes', 'Animation Specs', 'Style Guide'],
+          color: 'from-cyan-500/20 to-transparent'
+        },
+        {
+          phase: 'Development',
+          number: '03',
+          duration: 'Week 7-12',
+          title: 'Code & Coffee',
+          description: 'We write code like poetry - beautiful, efficient, and meaningful. Every function has purpose, every line has impact.',
+          activities: [
+            { name: 'Architecture', icon: '🏗️', description: 'Build solid foundations' },
+            { name: 'Coding', icon: '💻', description: 'Transform designs to reality' },
+            { name: 'Integration', icon: '🔗', description: 'Connect all the pieces' },
+            { name: 'Testing', icon: '🧪', description: 'Break it until it\'s unbreakable' }
+          ],
+          deliverables: ['Production Code', 'API Documentation', 'Test Suite', 'Performance Report'],
+          color: 'from-cyan-600/20 to-transparent'
+        },
+        {
+          phase: 'Launch',
+          number: '04',
+          duration: 'Week 13+',
+          title: 'Blast Off & Beyond',
+          description: 'Launch isn\'t the end, it\'s the beginning. We deploy, optimize, and celebrate, then keep making it better.',
+          activities: [
+            { name: 'Deployment', icon: '🚀', description: 'Go live with confidence' },
+            { name: 'Optimization', icon: '⚡', description: 'Speed up everything' },
+            { name: 'Training', icon: '📚', description: 'Empower your team' },
+            { name: 'Support', icon: '🛡️', description: '24/7 peace of mind' }
+          ],
+          deliverables: ['Live Product', 'Documentation', 'Training Materials', 'Support Plan'],
+          color: 'from-cyan-700/20 to-transparent'
+        }
+      ]
+    },
+    he: {
+      // Hebrew translations would go here
+      label: '04 — איך אנחנו עובדים',
+      title: 'שיטת',
+      titleOutline: 'ITAYOST',
+      subtitle: 'מכאוס לבהירות ב-4 שלבים',
+      phases: [] // Would include Hebrew translations
+    }
+  };
+
+  const text = content[locale];
+
   return (
-    <section ref={containerRef} className="relative py-32 lg:py-40 bg-dark-950 overflow-hidden">
-      {/* Background layers */}
-      <div className="absolute inset-0">
-        {/* Gradient mesh */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent-purple/5 to-transparent" />
-        
-        {/* Dot pattern */}
-        <div className="absolute inset-0 bg-dots opacity-10" />
-        
-        {/* Animated shapes */}
-        <motion.div style={{ y: parallaxY }} className="absolute inset-0 pointer-events-none">
-          <motion.div
-            animate={{
-              x: mousePosition.x * 30,
-              y: mousePosition.y * 30,
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="absolute top-1/3 -right-32 w-96 h-96"
-          >
-            <div className="w-full h-full shape-triangle bg-gradient-to-br from-accent-purple/10 to-accent-indigo/10 blur-3xl" />
-          </motion.div>
-          
-          <motion.div
-            animate={{
-              x: mousePosition.x * -20,
-              rotate: [0, 360],
-            }}
-            transition={{ 
-              x: { type: "spring", stiffness: 30, damping: 20 },
-              rotate: { duration: 40, repeat: Infinity, ease: "linear" }
-            }}
-            className="absolute bottom-1/3 -left-32 w-80 h-80"
-          >
-            <div className="w-full h-full shape-hexagon bg-gradient-to-tr from-accent-blue/10 to-accent-cyan/10 blur-3xl" />
-          </motion.div>
-        </motion.div>
-      </div>
-      
-      <div className="container relative z-10">
-        {/* Section Header */}
+    <section 
+      ref={containerRef}
+      className="py-32 bg-gray-900 relative overflow-hidden"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      <div className="px-8 md:px-16 lg:px-32 max-w-[1400px] mx-auto relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl mx-auto mb-20"
+          className="text-center mb-16"
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full card-glass mb-10"
-          >
-            <Workflow className="w-5 h-5 text-accent-purple" />
-            <span className="text-sm font-semibold uppercase tracking-wider text-white/80">
-              תהליך העבודה
+          <span className="text-cyan-400 text-sm uppercase tracking-[0.2em] font-medium">
+            {text.label}
+          </span>
+          <h2 className="mt-4 mb-4">
+            <span className="text-white font-bold text-5xl md:text-6xl">
+              {text.title}{' '}
             </span>
-          </motion.div>
-          
-          <h2 className="text-display-xl lg:text-display-2xl font-display font-bold mb-8">
-            <span className="block text-white">מרעיון</span>
-            <span className="block heading-gradient">למוצר מושלם</span>
+            <span 
+              className="font-bold text-5xl md:text-6xl"
+              style={{
+                WebkitTextStroke: '2px rgba(0, 217, 255, 0.5)',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              {text.titleOutline}
+            </span>
           </h2>
-          
-          <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto">
-            תהליך עבודה מסודר ומוכח שמבטיח תוצאות מעולות בכל פעם
+          <p className="text-gray-400 text-lg">
+            {text.subtitle}
           </p>
         </motion.div>
-        
+
         {/* Process Timeline */}
         <div className="relative">
-          {/* Connection Line - Desktop */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2">
-            <div className="h-full bg-white/10" />
+          {/* Progress Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-px bg-gray-800">
             <motion.div
-              initial={{ width: "0%" }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 2, ease: "easeOut" }}
-              className="absolute top-0 h-full bg-gradient-to-r from-accent-purple via-accent-indigo to-accent-blue"
+              className="absolute top-0 left-0 w-full bg-gradient-to-b from-cyan-400 to-cyan-600"
+              style={{ height: lineHeight }}
             />
           </div>
-          
-          {/* Process Steps */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-y-16">
-            {processSteps.map((step, index) => (
+
+          {/* Phases */}
+          <div className="space-y-32">
+            {text.phases.map((phase, index) => (
               <motion.div
-                key={step.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={index}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1, type: "spring" }}
-                onMouseEnter={() => { setActiveStep(step.step); }}
-                onMouseLeave={() => { setActiveStep(null); }}
-                className={`relative ${index >= 3 ? 'lg:mt-24' : ''}`}
+                transition={{ delay: index * 0.2 }}
+                className={`relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center ${
+                  index % 2 === 1 ? 'lg:grid-flow-dense' : ''
+                }`}
               >
-                <ProcessCard 
-                  step={step} 
-                  isActive={activeStep === step.step}
-                  index={index}
-                />
+                {/* Phase Number Circle */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gray-900 border-2 border-cyan-400 rounded-full flex items-center justify-center z-20">
+                  <span className="text-cyan-400 font-bold text-xl">
+                    {phase.number}
+                  </span>
+                </div>
+
+                {/* Content Card */}
+                <motion.div
+                  className={`bg-black/50 backdrop-blur-sm border border-gray-800 p-8 ${
+                    index % 2 === 1 ? 'lg:col-start-2' : ''
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {/* Phase Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-3xl font-bold text-white">
+                      {phase.phase}
+                    </h3>
+                    <span className="text-cyan-400 text-sm">
+                      {phase.duration}
+                    </span>
+                  </div>
+
+                  {/* Title & Description */}
+                  <h4 className="text-xl text-cyan-400 mb-3">
+                    {phase.title}
+                  </h4>
+                  <p className="text-gray-400 mb-6">
+                    {phase.description}
+                  </p>
+
+                  {/* Activities Grid */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    {phase.activities.map((activity, idx) => (
+                      <motion.div
+                        key={idx}
+                        className="group cursor-pointer"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-2xl">{activity.icon}</span>
+                          <span className="text-white font-medium text-sm">
+                            {activity.name}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 group-hover:text-gray-400 transition-colors">
+                          {activity.description}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Deliverables */}
+                  <div className="pt-4 border-t border-gray-800">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">
+                      Deliverables:
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {phase.deliverables.map((deliverable, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-1 text-xs bg-gray-800 text-gray-400"
+                        >
+                          {deliverable}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Background Gradient */}
+                  <div 
+                    className={`absolute inset-0 bg-gradient-to-r ${phase.color} pointer-events-none`}
+                  />
+                </motion.div>
+
+                {/* Visual Element */}
+                <div className={`relative h-64 ${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    animate={{
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                  >
+                    <div className="w-48 h-48 border-2 border-cyan-400/20 rounded-full" />
+                    <div className="absolute w-32 h-32 border-2 border-cyan-400/30 rounded-full" />
+                    <div className="absolute w-16 h-16 border-2 border-cyan-400/40 rounded-full" />
+                  </motion.div>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
-        
-        {/* CTA Section */}
+
+        {/* Process CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-20 text-center"
+          className="text-center mt-24"
         >
-          <div className="card-glass-heavy rounded-3xl p-12 max-w-3xl mx-auto backdrop-blur-2xl">
-            <Users className="w-16 h-16 mx-auto mb-6 text-accent-purple" />
-            <h3 className="text-3xl font-bold text-white mb-4">
-              מוכנים להתחיל?
-            </h3>
-            <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-              בואו נעבוד יחד על הפרויקט הבא שלכם ונהפוך את הרעיון שלכם למציאות
-            </p>
-            <Link href="/contact">
-              <button className="btn-primary group">
-                <span className="flex items-center gap-3">
-                  התחילו עכשיו
-                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </button>
-            </Link>
-          </div>
+          <p className="text-2xl text-gray-400 mb-8">
+            Ready to start your journey with our proven process?
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-3 border border-cyan-400 text-cyan-400 font-bold uppercase tracking-wider text-sm hover:bg-cyan-400 hover:text-black transition-all"
+          >
+            Let&apos;s Talk Process
+          </motion.button>
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function ProcessCard({ step, isActive }: { step: ProcessStep; isActive: boolean; index: number }) {
-  const Icon = step.icon;
-  
-  return (
-    <motion.div
-      whileHover={{ y: -10, scale: 1.02 }}
-      transition={{ duration: 0.3 }}
-      className="relative h-full group"
-    >
-      {/* Step Number - Floating Badge */}
-      <motion.div
-        whileHover={{ scale: 1.1, rotate: 360 }}
-        transition={{ duration: 0.5 }}
-        className="absolute -top-6 left-1/2 -translate-x-1/2 z-20"
-      >
-        <div className={`w-14 h-14 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center shadow-xl`}>
-          <span className="text-white font-bold text-xl">{step.step}</span>
-        </div>
-      </motion.div>
-      
-      {/* Card */}
-      <div className="card-glass-heavy rounded-3xl p-8 pt-12 h-full backdrop-blur-2xl">
-        {/* Background gradient on hover */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isActive ? 1 : 0 }}
-          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${step.gradient} opacity-5`}
-        />
-        
-        {/* Icon */}
-        <motion.div
-          animate={{ rotate: isActive ? 360 : 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative mb-6"
-        >
-          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${step.gradient} p-4 shadow-xl relative`}>
-            <Icon className="w-full h-full text-white" />
-            {/* Glow effect */}
-            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${step.gradient} blur-xl opacity-50`} />
-          </div>
-        </motion.div>
-        
-        {/* Content */}
-        <h3 className="text-2xl font-bold text-white mb-2">
-          {step.title}
-        </h3>
-        {step.titleEn && (
-          <p className="text-sm text-gray-500 mb-4 font-mono">
-            {step.titleEn}
-          </p>
-        )}
-        
-        <p className="text-gray-400 mb-6 leading-relaxed">
-          {step.description}
-        </p>
-        
-        {/* Tasks */}
-        <div className="space-y-2 mb-6">
-          {step.tasks.map((task, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: isActive ? 1 : 0.6, x: isActive ? 0 : -10 }}
-              transition={{ delay: idx * 0.05 }}
-              className="flex items-center gap-2 text-sm text-gray-400"
-            >
-              <div className="w-1.5 h-1.5 rounded-full bg-accent-purple" />
-              <span>{task}</span>
-            </motion.div>
-          ))}
-        </div>
-        
-        {/* Duration Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10">
-          <Sparkles className="w-4 h-4 text-accent-purple" />
-          <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">
-            {step.duration}
-          </span>
-        </div>
-      </div>
-    </motion.div>
   );
 }

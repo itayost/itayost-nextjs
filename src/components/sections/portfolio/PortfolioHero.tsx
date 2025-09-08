@@ -1,148 +1,229 @@
-// src/components/sections/portfolio/PortfolioHero.tsx
+// src/components/portfolio/PortfolioHero.tsx
 'use client';
 
-import { motion } from 'framer-motion';
-import Button from '@/components/ui/Button';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamic 3D Scene
+const PortfolioScene = dynamic(
+  () => import('../../three/PortfolioScene'),
+  { ssr: false }
+);
 
 interface PortfolioHeroProps {
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  showStats?: boolean;
-  stats?: {
-    projects?: number;
-    clients?: number;
-    years?: number;
-    satisfaction?: number;
-  };
-  showCTA?: boolean;
-  className?: string;
+  locale?: 'en' | 'he';
 }
 
-export default function PortfolioHero({
-  title = 'הפרויקטים שלנו',
-  subtitle = 'פורטפוליו',
-  description = 'צפו בעבודות האחרונות שלנו וגלו איך אנחנו הופכים רעיונות למציאות דיגיטלית',
-  showStats = true,
-  stats = {
-    projects: 50,
-    clients: 30,
-    years: 5,
-    satisfaction: 98
-  },
-  showCTA = true,
-  className
-}: PortfolioHeroProps) {
+export default function PortfolioHero({ locale = 'en' }: PortfolioHeroProps) {
+  const isRTL = locale === 'he';
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
-  const statsData = [
-    { label: 'פרויקטים', value: `${stats.projects}+`, suffix: '' },
-    { label: 'לקוחות מרוצים', value: `${stats.clients}+`, suffix: '' },
-    { label: 'שנות ניסיון', value: stats.years, suffix: '' },
-    { label: 'שביעות רצון', value: stats.satisfaction, suffix: '%' }
-  ];
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  const content = {
+    en: {
+      label: 'Our Portfolio',
+      title1: 'Digital',
+      title2: 'Masterpieces', // Outline
+      subtitle: 'Every project is a story of innovation, creativity, and relentless pursuit of perfection.',
+      stats: [
+        { number: '127+', label: 'Projects' },
+        { number: '52', label: 'Awards' },
+        { number: '98%', label: 'Happy Clients' }
+      ],
+      scroll: 'Explore Our Work'
+    },
+    he: {
+      label: 'התיק שלנו',
+      title1: 'יצירות מופת',
+      title2: 'דיגיטליות', // Outline
+      subtitle: 'כל פרויקט הוא סיפור של חדשנות, יצירתיות ומרדף בלתי פוסק אחר שלמות.',
+      stats: [
+        { number: '127+', label: 'פרויקטים' },
+        { number: '52', label: 'פרסים' },
+        { number: '98%', label: 'לקוחות מרוצים' }
+      ],
+      scroll: 'גלו את העבודות שלנו'
+    }
+  };
+
+  const text = content[locale];
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setMousePosition({
+          x: (e.clientX - rect.left) / rect.width,
+          y: (e.clientY - rect.top) / rect.height
+        });
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
-    <section className={cn(
-      'relative py-20 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 overflow-hidden',
-      className
-    )}>
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-hero-pattern opacity-5" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" />
+    <section 
+      ref={containerRef}
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      {/* 3D Background */}
+      <div className="absolute inset-0 opacity-50">
+        <PortfolioScene mousePosition={mousePosition} />
       </div>
 
-      <div className="container relative z-10">
-        <motion.div
+      {/* Animated Grid */}
+      <motion.div 
+        className="absolute inset-0 opacity-[0.03]"
+        style={{ y }}
+      >
+        <div 
+          style={{
+            backgroundImage: `linear-gradient(rgba(0, 217, 255, 0.2) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(0, 217, 255, 0.2) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+          className="w-full h-full"
+        />
+      </motion.div>
+
+      {/* Floating Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-px bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent"
+            style={{
+              left: `${20 * (i + 1)}%`,
+              height: '100%'
+            }}
+            animate={{
+              opacity: [0, 0.5, 0],
+              scaleY: [0, 1, 0]
+            }}
+            transition={{
+              duration: 3 + i,
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: 'easeInOut'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Content */}
+      <motion.div 
+        className="relative z-10 text-center px-8 max-w-6xl mx-auto"
+        style={{ opacity }}
+      >
+        {/* Label */}
+        <motion.span 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto text-center"
+          className="inline-block text-cyan-400 text-sm uppercase tracking-[0.3em] font-medium mb-8"
         >
-          {/* Subtitle */}
-          {subtitle && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-teal-400 font-medium mb-2 text-sm sm:text-base"
-            >
-              {subtitle}
-            </motion.p>
-          )}
-
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6"
+          {text.label}
+        </motion.span>
+        
+        {/* Title */}
+        <motion.h1 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+        >
+          <motion.span 
+            className="block text-white font-bold mb-2"
+            style={{
+              fontFamily: 'Space Grotesk, Inter, sans-serif',
+              fontSize: 'clamp(3rem, 10vw, 8rem)',
+              letterSpacing: '-0.03em',
+              lineHeight: '0.9',
+              transform: `translateX(${mousePosition.x * 10}px)`
+            }}
           >
-            {title}
-          </motion.h1>
+            {text.title1}
+          </motion.span>
+          
+          <motion.span 
+            className="block font-bold"
+            style={{
+              fontFamily: 'Space Grotesk, Inter, sans-serif',
+              fontSize: 'clamp(3rem, 10vw, 8rem)',
+              letterSpacing: '-0.03em',
+              lineHeight: '0.9',
+              WebkitTextStroke: '2px rgba(0, 217, 255, 0.5)',
+              WebkitTextFillColor: 'transparent',
+              transform: `translateX(${-mousePosition.x * 10}px)`
+            }}
+          >
+            {text.title2}
+          </motion.span>
+        </motion.h1>
 
-          {/* Description */}
-          {description && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-base sm:text-lg text-gray-400 leading-relaxed max-w-3xl mx-auto mb-8"
-            >
-              {description}
-            </motion.p>
-          )}
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="mt-8 text-gray-300 text-xl leading-relaxed max-w-3xl mx-auto"
+        >
+          {text.subtitle}
+        </motion.p>
 
-          {/* CTA Buttons */}
-          {showCTA && (
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-12 flex justify-center gap-12"
+        >
+          {text.stats.map((stat, index) => (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+              key={index}
+              className="text-center"
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <Link href="/contact">
-                <Button size="lg" variant="gradient">
-                  התחילו פרויקט
-                </Button>
-              </Link>
-              <Link href="#portfolio">
-                <Button size="lg" variant="outline">
-                  צפו בעבודות
-                </Button>
-              </Link>
+              <div className="text-3xl font-bold text-cyan-400">
+                {stat.number}
+              </div>
+              <div className="text-xs uppercase tracking-wider text-gray-500 mt-1">
+                {stat.label}
+              </div>
             </motion.div>
-          )}
-
-          {/* Stats */}
-          {showStats && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8"
-            >
-              {statsData.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="text-3xl sm:text-4xl font-bold text-teal-400 mb-1">
-                    {stat.value}{stat.suffix}
-                  </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+          ))}
         </motion.div>
-      </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.6 }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+        >
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-xs uppercase tracking-[0.2em] text-gray-500 font-medium">
+              {text.scroll}
+            </span>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-cyan-400">
+                <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-// src/components/sections/contact/ContactHero.tsx
+// src/components/sections/services/ServicesHero.tsx
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -6,25 +6,27 @@ import { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 // Dynamic import of 3D scene
-const ContactScene = dynamic(
-  () => import('@/components/three/ContactScene'),
+const ServicesScene = dynamic(
+  () => import('@/components/three/ServicesScene'),
   { 
     ssr: false,
     loading: () => (
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-cyan-400 text-sm uppercase tracking-wider animate-pulse opacity-40">
-          Connecting...
+          Initializing Services...
         </div>
       </div>
     )
   }
 );
 
-interface ContactHeroProps {
+interface ServicesHeroProps {
   locale: 'en' | 'he';
+  selectedService?: string | null;
+  setSelectedService?: (service: string | null) => void;
 }
 
-export default function ContactHero({ locale }: ContactHeroProps) {
+export default function ServicesHero({ locale, selectedService, setSelectedService }: ServicesHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
@@ -35,24 +37,20 @@ export default function ContactHero({ locale }: ContactHeroProps) {
 
   const content = {
     en: {
-      label: '01 — Get In Touch',
-      title1: "Let's",
-      title2: 'Connect',
-      title3: 'Together',
-      subtitle: 'Ready to transform your ideas into digital reality',
-      availability: 'Available 24/7',
-      responseTime: 'Average response: 2 hours',
-      scroll: 'Scroll to contact'
+      label: '01 — What We Do',
+      title1: 'Digital',
+      title2: 'Services',
+      title3: 'Excellence',
+      subtitle: 'End-to-end solutions powered by cutting-edge technology and generative design',
+      scroll: 'Scroll to explore'
     },
     he: {
-      label: '01 — צרו קשר',
-      title1: 'בואו',
-      title2: 'נתחבר',
-      title3: 'ביחד',
-      subtitle: 'מוכנים להפוך את הרעיונות שלכם למציאות דיגיטלית',
-      availability: 'זמינים 24/7',
-      responseTime: 'זמן תגובה ממוצע: שעתיים',
-      scroll: 'גלול ליצירת קשר'
+      label: '01 — מה אנחנו עושים',
+      title1: 'שירותים',
+      title2: 'דיגיטליים',
+      title3: 'מתקדמים',
+      subtitle: 'פתרונות מקצה לקצה המופעלים על ידי טכנולוגיה חדשנית ועיצוב גנרטיבי',
+      scroll: 'גלול לחקור'
     }
   };
 
@@ -69,7 +67,7 @@ export default function ContactHero({ locale }: ContactHeroProps) {
         className="absolute inset-0"
         style={{ scale }}
       >
-        <ContactScene />
+        <ServicesScene />
       </motion.div>
 
       {/* Gradient Overlay */}
@@ -134,49 +132,40 @@ export default function ContactHero({ locale }: ContactHeroProps) {
             {currentContent.subtitle}
           </motion.p>
 
-          {/* Quick Contact Options */}
+          {/* Service Quick Links */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className={`flex flex-wrap gap-4 mb-8 ${isRTL ? 'flex-row-reverse' : ''}`}
-          >
-            <a 
-              href="tel:+972544994417"
-              className="px-6 py-3 bg-cyan-400 text-black font-bold uppercase tracking-wider hover:bg-cyan-300 transition-colors duration-300"
-            >
-              {locale === 'en' ? 'Call Now' : 'התקשר עכשיו'}
-            </a>
-            <a 
-              href="https://wa.me/972544994417"
-              className="px-6 py-3 border border-cyan-400 text-cyan-400 uppercase tracking-wider hover:bg-cyan-400 hover:text-black transition-all duration-300"
-            >
-              WhatsApp
-            </a>
-            <a 
-              href="mailto:itay@itayost.com"
-              className="px-6 py-3 border border-cyan-400/40 text-gray-400 uppercase tracking-wider hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
-            >
-              Email
-            </a>
-          </motion.div>
-
-          {/* Availability Badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
             className={`flex flex-wrap gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}
           >
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-cyan-400 animate-pulse" />
-              <span className="text-sm text-gray-400">{currentContent.availability}</span>
-            </div>
-            <div className="text-gray-600">|</div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 border border-cyan-400" />
-              <span className="text-sm text-gray-400">{currentContent.responseTime}</span>
-            </div>
+            {[
+              { id: 'web', label: locale === 'en' ? 'Web Development' : 'פיתוח אתרים' },
+              { id: 'mobile', label: locale === 'en' ? 'Mobile Apps' : 'אפליקציות' },
+              { id: 'design', label: locale === 'en' ? 'UI/UX Design' : 'עיצוב' },
+              { id: 'cloud', label: locale === 'en' ? 'Cloud Solutions' : 'פתרונות ענן' }
+            ].map((service, index) => (
+              <motion.button
+                key={service.id}
+                onClick={() => setSelectedService?.(service.id)}
+                className={`
+                  px-6 py-3 border border-cyan-400/20 rounded-none
+                  text-sm uppercase tracking-wider
+                  transition-all duration-300
+                  ${selectedService === service.id 
+                    ? 'bg-cyan-400/10 border-cyan-400 text-cyan-400' 
+                    : 'hover:border-cyan-400/40 hover:bg-cyan-400/5 text-gray-400 hover:text-cyan-400'
+                  }
+                `}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.9 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {service.label}
+              </motion.button>
+            ))}
           </motion.div>
         </div>
 
@@ -205,7 +194,7 @@ export default function ContactHero({ locale }: ContactHeroProps) {
           isRTL ? 'left-8' : 'right-8'
         }`}
       >
-        {['hero', 'methods', 'form', 'faq', 'location'].map((section, index) => (
+        {['hero', 'grid', 'features', 'process', 'pricing'].map((section, index) => (
           <motion.button
             key={section}
             onClick={() => {
@@ -216,7 +205,7 @@ export default function ContactHero({ locale }: ContactHeroProps) {
             whileTap={{ scale: 0.9 }}
           >
             <div className={`
-              w-2 h-2 border border-cyan-400/40
+              w-2 h-2 rounded-full border border-cyan-400/40
               transition-all duration-300
               ${index === 0 ? 'bg-cyan-400' : 'group-hover:bg-cyan-400/50'}
             `} />

@@ -4,7 +4,7 @@
 import { useRef, useEffect } from 'react';
 
 // === MINIMAL SERVICES SECTION ICON ===
-export function MinimalServicesIcon({ serviceIndex = 0, className = "" }) {
+export function MinimalServicesIcon({ className = "", serviceIndex = 0 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -196,7 +196,7 @@ export function MinimalFloatingElements({ className = "" }) {
     let mounted = true;
     let animationId: number;
     let scene: any, camera: any, renderer: any;
-    let elements: any[] = [];
+    const elements: any[] = [];
 
     const initMinimalFloating = async () => {
       try {
