@@ -1,5 +1,5 @@
 // src/components/about/AboutHero.tsx
-"use client";
+'use client';
 
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';

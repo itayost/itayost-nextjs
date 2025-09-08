@@ -13,39 +13,46 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^14.0.4",
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.18.0",
-    "clsx": "^2.0.0",
-    "framer-motion": "^10.18.0",
-    "gsap": "^3.13.0",
-    "lucide-react": "^0.542.0",
     "next": "^14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "simplex-noise": "^4.0.3",
+    "typescript": "^5.3.3",
+    
+    "framer-motion": "^10.17.0",
+    "three": "^0.160.0",
+    "@react-three/fiber": "^8.15.0",
+    "@react-three/drei": "^9.92.0",
+    
+    "gsap": "^3.12.4",
+    "lucide-react": "^0.300.0",
+    
+    "clsx": "^2.0.0",
     "tailwind-merge": "^2.2.0",
-    "three": "^0.160.1",
-    "typescript": "^5.3.3"
+    
+    "@next/bundle-analyzer": "^14.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "@types/three": "^0.159.0",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
-    "@typescript-eslint/parser": "^6.17.0",
-    "autoprefixer": "^10.4.16",
+    
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "file-loader": "^6.2.0",
-    "postcss": "^8.4.32",
+    
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.9",
+    
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16",
+    
     "raw-loader": "^4.0.2",
-    "tailwindcss": "^3.4.0"
+    "file-loader": "^6.2.0"
   },
   "engines": {
     "node": ">=18.0.0",

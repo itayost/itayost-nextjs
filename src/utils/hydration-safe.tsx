@@ -1,13 +1,13 @@
-// Src/utils/hydration-safe.tsx
-"use client";
+// src/utils/hydration-safe.tsx
+'use client';
 
-import { ReactNode,useEffect, useState } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 
 /**
  * Component that only renders children on client side
  * Prevents hydration mismatches for dynamic content
  */
-export function ClientOnly({ children }: { readonly children: ReactNode }) {
+export function ClientOnly({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

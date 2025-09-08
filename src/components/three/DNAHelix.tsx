@@ -15,9 +15,9 @@ export default function DNAHelix() {
     let scene: any;
     let camera: any;
     let renderer: any;
-    const helix1: any[] = [];
-    const helix2: any[] = [];
-    const connections: any[] = [];
+    let helix1: any[] = [];
+    let helix2: any[] = [];
+    let connections: any[] = [];
 
     const initScene = async () => {
       try {

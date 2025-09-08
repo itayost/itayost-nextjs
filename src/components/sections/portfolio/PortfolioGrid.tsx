@@ -1,7 +1,7 @@
 // src/components/portfolio/PortfolioGrid.tsx
 'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 interface PortfolioGridProps {

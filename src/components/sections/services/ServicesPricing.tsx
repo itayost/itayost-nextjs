@@ -1,5 +1,5 @@
 // src/components/sections/services/ServicesPricing.tsx
-"use client";
+'use client';
 
 import { motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';

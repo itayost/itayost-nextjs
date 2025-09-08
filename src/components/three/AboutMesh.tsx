@@ -1,11 +1,11 @@
-// Src/components/three/AboutMesh.tsx
-"use client";
+// src/components/three/AboutMesh.tsx
+'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
-export default function AboutMesh () {
-  const containerReference = useRef<HTMLDivElement>(null);
-  const [isLoading,
+export default function AboutMesh() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!containerRef.current) return;

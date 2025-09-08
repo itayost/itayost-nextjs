@@ -16,10 +16,10 @@ export default function TechStackScene() {
     let scene: any;
     let camera: any;
     let renderer: any;
-    const techCrystals: any[] = [];
-    const dataFlow: any[] = [];
+    let techCrystals: any[] = [];
+    let dataFlow: any[] = [];
     let centralMatrix: any;
-    const orbitalLayers: any[] = [];
+    let orbitalLayers: any[] = [];
     let energyField: any;
 
     const initScene = async () => {

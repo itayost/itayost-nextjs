@@ -1,9 +1,9 @@
-// Src/components/sections/About.tsx
-"use client";
+// src/components/sections/About.tsx
+'use client';
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import dynamic from "next/dynamic";
 
 // Dynamic 3D Scene import for About section
 const AboutMesh = dynamic(

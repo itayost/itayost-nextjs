@@ -1,14 +1,14 @@
-// Src/components/sections/Services.tsx
+// src/components/sections/Services.tsx
 'use client';
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-interface ServicesProperties {
-  locale?: "en" | 'he';
+interface ServicesProps {
+  locale?: 'en' | 'he';
 }
 
-export default function Services ({ locale = 'en' }: ServicesProps) {
+export default function Services({ locale = 'en' }: ServicesProps) {
   const isRTL = locale === 'he';
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 

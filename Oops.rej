@@ -1,3 +1,0 @@
-@@ -130,1 +130,1 @@
--              onClick={() => setIsMobileMenuOpen(false)}
-+              onClick={() => { setIsMobileMenuOpen(false); }}

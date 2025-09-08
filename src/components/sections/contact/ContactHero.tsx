@@ -1,7 +1,7 @@
 // src/components/sections/contact/ContactHero.tsx
 'use client';
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import dynamic from 'next/dynamic';
 

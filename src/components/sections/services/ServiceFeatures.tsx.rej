@@ -1,3 +1,0 @@
-@@ -5,1 +5,1 @@
--import { ServiceFeature } from '@/types/service';
-+import { ServiceFeature } from "@/types/service";

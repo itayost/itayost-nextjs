@@ -1,11 +1,11 @@
 // Fixed CTA Section Component
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-interface CTASectionProperties {
-  readonly locale?: 'en' | 'he';
+interface CTASectionProps {
+  locale?: 'en' | 'he';
 }
 
 // Generate stable particle positions based on index

@@ -1,15 +1,15 @@
-// Src/components/ui/ProjectImage.tsx
+// src/components/ui/ProjectImage.tsx
+'use client';
 
+import { useEffect, useRef } from 'react';
 
-import {useEffect, useRef } from 'react';
-
-interface ProjectImageProperties {
-  "projectId": number;
+interface ProjectImageProps {
   projectId: number;
-  "title": string;
+  color: string;
+  title: string;
 }
 
-export default function ProjectImage({projectId, color }: ProjectImageProps) {
+export default function ProjectImage({ projectId, color }: ProjectImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
